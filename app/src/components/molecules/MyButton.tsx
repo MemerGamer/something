@@ -13,9 +13,21 @@ type MyButtonProps = {
   subLine?: string;
   smalltext?: boolean;
   icon?: boolean;
+  backgroundColor?: string;
+  borderColor?: string;
 };
 
-const MyButton = ({ text, onPress, accent, small, subLine, smalltext, icon }: MyButtonProps) => {
+const MyButton = ({
+  text,
+  onPress,
+  accent,
+  small,
+  subLine,
+  smalltext,
+  icon,
+  backgroundColor,
+  borderColor
+}: MyButtonProps) => {
   if (small) {
     return (
       <Pressable onPress={onPress}>
@@ -28,7 +40,14 @@ const MyButton = ({ text, onPress, accent, small, subLine, smalltext, icon }: My
 
   return (
     <Pressable onPress={onPress}>
-      <Column styles={[styles.button, accent ? styles.accent : styles.button]}>
+      <Column
+        styles={[
+          styles.button,
+          accent ? styles.accent : styles.button,
+          backgroundColor ? { backgroundColor } : styles.button,
+          borderColor ? { borderColor } : styles.button
+        ]}
+      >
         {icon && <Camera color={'#16a34a'} style={{ marginRight: 10 }} />}
         {!smalltext ? <H4 accent={accent}>{text}</H4> : <H3 accent={accent}>{text}</H3>}
       </Column>

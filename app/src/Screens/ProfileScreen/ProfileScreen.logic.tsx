@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useState } from 'react';
 import { getProfileData, profileSelector } from '../../redux/profile/ProfileStack';
-import { authSelector, logout } from '../../redux/auth/AuthSlice';
+import { authSelector } from '../../redux/auth/AuthSlice';
 
 export const useProfileScreenLogic = () => {
   const [refreshing, setrefreshing] = useState(true);
@@ -15,9 +15,5 @@ export const useProfileScreenLogic = () => {
     setrefreshing(false);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
-  return { loading, error, profile, getData, handleLogout, refreshing, user };
+  return { loading, error, profile, getData, refreshing, user };
 };

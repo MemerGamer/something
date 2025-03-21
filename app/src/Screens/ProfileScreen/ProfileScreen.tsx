@@ -11,7 +11,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import * as Icons from 'react-native-feather';
 import H3 from '../../components/atoms/H3';
 import ThingCard from '../../components/molecules/ThingCard';
-import MyButton from '../../components/molecules/MyButton';
+import { Settings } from 'react-native-feather';
 
 type NonUndefined<T> = T extends undefined ? never : T;
 
@@ -46,6 +46,30 @@ const ProfileScreen = ({ navigation }: any) => {
     );
   }
 
+  const renderButton = () => {
+    return (
+      <Column
+        styles={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 15,
+          backgroundColor: '#16a34a',
+          borderRadius: 15,
+          position: 'absolute',
+          right: 16,
+          top: 20
+        }}
+      >
+        <Settings
+          color={'white'}
+          onPress={() => {
+            navigation.push('Settings');
+          }}
+        />
+      </Column>
+    );
+  };
+
   return (
     <Column
       scrollable
@@ -61,6 +85,7 @@ const ProfileScreen = ({ navigation }: any) => {
       <H1>
         Profile <H1 accent>Things</H1>
       </H1>
+      {renderButton()}
       <Column
         styles={{
           borderColor: '#f0f0f0',
@@ -72,7 +97,7 @@ const ProfileScreen = ({ navigation }: any) => {
         }}
       >
         <Row styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <H2>{logic.user?.username}</H2>
+          <H2>@{logic.user?.username}</H2>
           <Text>{logic.profile?.level.currentScore} points</Text>
         </Row>
         <Spacer space={10} />
@@ -181,6 +206,7 @@ const ProfileScreen = ({ navigation }: any) => {
         }}
       >
         <H3 accent>My Things</H3>
+        {/* TODO:Fix two children with same key problem which occurs, because things are shared */}
         <FlatList
           scrollEnabled={false}
           data={opened ? logic.profile?.things : logic.profile?.things.slice(0, 3)}
@@ -197,13 +223,6 @@ const ProfileScreen = ({ navigation }: any) => {
             />
           )}
         />
-      </Column>
-      <Column
-        styles={{
-          marginTop: 100
-        }}
-      >
-        <MyButton accent smalltext text="Log out" onPress={logic.handleLogout} />
       </Column>
     </Column>
   );
