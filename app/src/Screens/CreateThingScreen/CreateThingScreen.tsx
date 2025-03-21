@@ -90,6 +90,13 @@ const CreateThingScreen = ({ navigation }: any) => {
             error={error}
             path={['name']}
           />
+
+          {/* EDIT AND SEE SCHEDULE */}
+          <ActionRow label={scheduleText()} action={() => navigation.push('SetTime')} />
+          <Row>
+            <ErrorText>{extractError(error, ['schedule'])}</ErrorText>
+          </Row>
+
           <LabeledInput
             multiline
             label={'Description'}
@@ -98,12 +105,6 @@ const CreateThingScreen = ({ navigation }: any) => {
             onChangeText={setThingDescription}
           />
         </Column>
-
-        {/* EDIT AND SEE SCHEDULE */}
-        <ActionRow label={scheduleText()} action={() => navigation.push('SetTime')} />
-        <Row>
-          <ErrorText>{extractError(error, ['schedule'])}</ErrorText>
-        </Row>
 
         {/* USERNAMES */}
         <Column>
