@@ -11,7 +11,8 @@ import {
   date,
   index,
   primaryKey,
-  json
+  json,
+  varchar
 } from 'drizzle-orm/pg-core';
 
 const timechangeColumns = {
@@ -84,7 +85,10 @@ export const ThingTable = pgTable(
       .default(check(`'personal'`, `type IN ('personal', 'social')`))
       .notNull(),
     location: text('location'),
+    // only used for social things
     coverFilename: text('cover_filename'),
+    visibility: text('visibility', { enum: ['public', 'private'] }),
+    join_code: varchar('join_code', { length: 10 }),
     ...timechangeColumns
   },
   (table) => ({

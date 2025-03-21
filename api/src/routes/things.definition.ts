@@ -128,7 +128,7 @@ export const createSocialThing = createRoute({
   responses: {
     ...defaultResponses,
     [StatusCodes.CREATED]: {
-      ...textc(z.string()),
+      ...jsonc(z.object({ thingId: z.string(), joinCode: z.string() })),
       description: `New social thing created.`
     }
   }
@@ -165,6 +165,25 @@ export const toggleSocialThings = createRoute({
     [StatusCodes.OK]: {
       ...textc(z.string()),
       description: `Toggled notifications for thing.`
+    }
+  }
+});
+
+export const joinSocialThingByCode = createRoute({
+  method: 'post',
+  path: '/join-by-code',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: 'Join a social thing using a join code',
+  tags: ['Things'],
+  request: {
+    body: jsonc(z.object({ joinCode: z.string().length(10) }))
+  },
+  responses: {
+    ...defaultResponses,
+    [StatusCodes.OK]: {
+      ...jsonc(z.object({ thingId: z.string(), name: z.string() })),
+      description: `Successfully joined the social thing`
     }
   }
 });
