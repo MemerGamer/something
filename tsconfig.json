@@ -7,6 +7,6 @@
     },
     "include": [
         "./api/src/**/*.ts",
-        "./app/src/**/*.ts"
+        "./app/src/**/*"
     ]
 }
