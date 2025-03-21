@@ -58,6 +58,7 @@ const Leaderboard = () => {
           alignItems: 'center',
           width: '100%'
         }}
+        scrollEnabled={false}
         data={leaderBoard}
         renderItem={({ item, index }) => {
           return (
