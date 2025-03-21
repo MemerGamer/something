@@ -8,7 +8,7 @@ import { useProfileScreenLogic } from './ProfileScreen.logic';
 import Label from '../../components/atoms/Label';
 import Spacer from '../../components/atoms/Spacer';
 import { FlatList } from 'react-native-gesture-handler';
-import * as Icons from 'react-native-feather';
+import Icon from 'react-native-remix-icon';
 import H3 from '../../components/atoms/H3';
 import ThingCard from '../../components/molecules/ThingCard';
 import { Settings } from 'react-native-feather';
@@ -149,8 +149,6 @@ const ProfileScreen = ({ navigation }: any) => {
           horizontal
           contentContainerStyle={{ gap: 10, flexGrow: 1 }}
           renderItem={({ item }) => {
-            const icon = item.icon as keyof typeof Icons;
-            const Icon = Icons[icon];
             return (
               <Column
                 styles={{
@@ -164,7 +162,11 @@ const ProfileScreen = ({ navigation }: any) => {
                   borderWidth: 1
                 }}
               >
-                {Icon ? <Icon color={'black'} /> : <Text>No icon for this badge: {item.icon}</Text>}
+                {item.icon ? (
+                  <Icon name={item.icon as any} color={'black'} />
+                ) : (
+                  <Text>No icon for this badge: {item.icon}</Text>
+                )}
                 <Label text={item.name} />
               </Column>
             );
