@@ -29,6 +29,13 @@
       "when": 1742566042349,
       "tag": "0003_elite_sugar_man",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1742586597671,
+      "tag": "0004_lively_centennial",
+      "breakpoints": true
     }
   ]
 }

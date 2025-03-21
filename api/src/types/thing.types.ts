@@ -95,6 +95,7 @@ export const SocialThingDTO = z.object({
       specificDate: z.string().nullable().optional()
     })
     .optional(),
+  visibility: z.enum(['public', 'private']),
   image: z.any().openapi({ format: 'binary' }).optional()
 });
 export type SocialThingDTO = z.infer<typeof SocialThingDTO>;
@@ -139,6 +140,8 @@ export const SocialThingPreviewModel = z.object({
   endTime: z.string(),
   location: z.string(),
   coverImage: z.string(),
-  notified: z.boolean()
+  notified: z.boolean(),
+  joinCode: z.string().nullable(),
+  hasAccess: z.boolean().nullable()
 });
 export type SocialThingPreviewModel = z.infer<typeof SocialThingPreviewModel>;
