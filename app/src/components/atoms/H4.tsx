@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type H4Props = {
   children?: React.ReactNode;
@@ -8,20 +9,8 @@ type H4Props = {
 };
 
 const H4 = ({ children, accent, cursive }: H4Props) => {
-  return <Text style={[styles.h4, accent && { color: '#16a34a' }, cursive && styles.cursive]}>{children}</Text>;
+  const styles = useThemedStyles();
+  return <Text style={[styles.H4, accent && styles.headerAccent, cursive && styles.cursive]}>{children}</Text>;
 };
 
 export default H4;
-
-const styles = StyleSheet.create({
-  h4: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#404040'
-  },
-  cursive: {
-    fontFamily: 'Caveat',
-    fontWeight: 'normal',
-    fontSize: 26
-  }
-});

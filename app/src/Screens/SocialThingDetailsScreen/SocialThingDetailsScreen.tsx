@@ -11,8 +11,10 @@ import { ChevronLeft, ChevronsLeft } from 'react-native-feather';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import MyButton from '../../components/molecules/MyButton';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const SocialThingDetailsScreen = ({ route, navigation }: any) => {
+  const styles = useThemedStyles();
   const { getDetails, thing, refreshing } = useThingDetailsScreenLogic();
   const { thingId, userCount } = route.params;
 
@@ -78,7 +80,7 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
             styles={{
               paddingHorizontal: 10,
               paddingVertical: 8,
-              backgroundColor: '#16a34a',
+              backgroundColor: styles.accent.backgroundColor,
               borderRadius: 10,
               width: 'auto',
               alignSelf: 'flex-start'
@@ -138,5 +140,3 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
 };
 
 export default SocialThingDetailsScreen;
-
-const styles = StyleSheet.create({});

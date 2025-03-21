@@ -12,10 +12,12 @@ import Icon from 'react-native-remix-icon';
 import H3 from '../../components/atoms/H3';
 import ThingCard from '../../components/molecules/ThingCard';
 import { Settings } from 'react-native-feather';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type NonUndefined<T> = T extends undefined ? never : T;
 
 const ProfileScreen = ({ navigation }: any) => {
+  const styles = useThemedStyles();
   const logic = useProfileScreenLogic();
 
   const [opened, setOpened] = useState(true);
@@ -53,7 +55,7 @@ const ProfileScreen = ({ navigation }: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           padding: 15,
-          backgroundColor: '#16a34a',
+          backgroundColor: styles.accent.backgroundColor,
           borderRadius: 15,
           position: 'absolute',
           right: 16,
@@ -88,7 +90,7 @@ const ProfileScreen = ({ navigation }: any) => {
       {renderButton()}
       <Column
         styles={{
-          borderColor: '#f0f0f0',
+          borderColor: styles.column.borderColor,
           borderWidth: 1,
           borderRadius: 8,
           padding: 16,
@@ -126,7 +128,7 @@ const ProfileScreen = ({ navigation }: any) => {
           styles={{
             width: '100%',
             height: 5,
-            backgroundColor: '#f0f0f0',
+            backgroundColor: styles.column.backgroundColor,
             borderRadius: 20,
             alignItems: 'flex-start',
             justifyContent: 'center'
@@ -136,7 +138,7 @@ const ProfileScreen = ({ navigation }: any) => {
             styles={{
               height: '100%',
               width: `${calculatePointPercentage(logic.profile)}%`,
-              backgroundColor: '#16a34a',
+              backgroundColor: styles.accent.backgroundColor,
               borderRadius: 20
             }}
           />
@@ -155,15 +157,15 @@ const ProfileScreen = ({ navigation }: any) => {
                   gap: 5,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: styles.column.backgroundColor,
                   padding: 10,
                   borderRadius: 10,
-                  borderColor: '#f0f0f0',
+                  borderColor: styles.column.borderColor,
                   borderWidth: 1
                 }}
               >
                 {item.icon ? (
-                  <Icon name={item.icon as any} color={'black'} />
+                  <Icon name={item.icon as any} color={styles.text.color} />
                 ) : (
                   <Text>No icon for this badge: {item.icon}</Text>
                 )}
@@ -180,7 +182,7 @@ const ProfileScreen = ({ navigation }: any) => {
       >
         <Column
           styles={{
-            borderColor: '#f0f0f0',
+            borderColor: styles.column.borderColor,
             borderWidth: 1,
             borderRadius: 8,
             paddingHorizontal: 16,
@@ -197,7 +199,7 @@ const ProfileScreen = ({ navigation }: any) => {
       </Pressable>
       <Column
         styles={{
-          borderColor: '#f0f0f0',
+          borderColor: styles.column.borderColor,
           borderWidth: 1,
           borderRadius: 8,
           paddingHorizontal: 16,
@@ -230,5 +232,4 @@ const ProfileScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({});
 export default ProfileScreen;

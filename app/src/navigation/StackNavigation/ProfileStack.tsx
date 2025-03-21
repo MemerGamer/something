@@ -3,14 +3,19 @@ import ProfileScreen from '../../Screens/ProfileScreen/ProfileScreen';
 import Leaderboard from '../../Screens/Leaderboard/Leaderboard';
 import ThingDetailsScreen from '../../Screens/ThingDetailsScreen/ThingDetailsScreen';
 import SettingsScreen from '../../Screens/SettingsScreen/SettingsScreen';
+import { useContext } from 'react';
+import { ThemeContext } from '../../contexts/ThemeContext';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const ProfileStack = createStackNavigator();
 
 export const ProfileStackNavigation = () => {
+  const styles = useThemedStyles();
+
   return (
     <ProfileStack.Navigator
       screenOptions={{
-        cardStyle: { backgroundColor: 'white' },
+        cardStyle: styles.container,
         headerShown: false
       }}
     >

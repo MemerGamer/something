@@ -6,6 +6,7 @@ import H4 from '../atoms/H4';
 import ApiService from '../../services/ApiService';
 import Row from '../atoms/Row';
 import { DateTime } from 'luxon';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type ImageViewerProps = {
   uri: string;
@@ -17,6 +18,7 @@ type ImageViewerProps = {
 const api = new ApiService();
 
 const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
+  const styles = useThemedStyles();
   const [image, setImage] = useState('');
   // console.log('createdAt', createdAt);
   // console.log(
@@ -52,8 +54,8 @@ const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
   return (
     <Column
       styles={{
-        backgroundColor: '#f5f5f5',
-        borderColor: '#e0e0e0',
+        backgroundColor: styles.column.backgroundColor,
+        borderColor: styles.column.borderColor,
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 16,
@@ -66,7 +68,7 @@ const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
           width: '100%',
           height: 417,
           resizeMode: 'contain',
-          backgroundColor: '#a5d1b5',
+          backgroundColor: styles.image.backgroundColor,
           borderRadius: 5,
           marginBottom: 16
         }}
@@ -89,5 +91,3 @@ const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
 };
 
 export default ImageViewer;
-
-const styles = StyleSheet.create({});

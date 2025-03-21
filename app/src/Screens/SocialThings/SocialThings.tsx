@@ -22,6 +22,7 @@ import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import ApiService from '../../services/ApiService';
 import LoadingOverlay from '../../components/organisms/LoadingOverlay';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const api = new ApiService();
 
@@ -52,8 +53,8 @@ const ImageView = ({ url }: { url: string }) => {
 };
 
 const SocialThings = ({ navigation }: any) => {
+  const styles = useThemedStyles();
   const logic = useSocialThingsLogic();
-
   useEffect(() => {
     logic.getSocialThings();
   }, []);
@@ -83,8 +84,8 @@ const SocialThings = ({ navigation }: any) => {
           <Column key={item.id}>
             <Column
               styles={{
-                backgroundColor: '#f5f5f5',
-                borderColor: '#e0e0e0',
+                backgroundColor: styles.column.backgroundColor,
+                borderColor: styles.column.borderColor,
                 borderWidth: 1,
                 borderRadius: 8,
                 padding: 16,
@@ -123,8 +124,8 @@ const SocialThings = ({ navigation }: any) => {
 
               <Row styles={{ justifyContent: 'space-between', marginTop: 20 }}>
                 <Row styles={{ gap: 5, alignItems: 'center' }}>
-                  <Users color={'#16a34a'} />
-                  <Text style={{ color: '#16a34a', fontWeight: 'bold' }}>{item.userCount}</Text>
+                  <Users color={styles.accent.color} />
+                  <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>{item.userCount}</Text>
                 </Row>
                 <Pressable onPress={() => logic.toggleNotifications(item.id)}>
                   <Row
@@ -134,7 +135,7 @@ const SocialThings = ({ navigation }: any) => {
                       paddingLeft: 18,
                       borderRadius: 5,
                       borderWidth: 2,
-                      borderColor: '#16a34a',
+                      borderColor: styles.accent.borderColor,
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: 16
@@ -142,14 +143,14 @@ const SocialThings = ({ navigation }: any) => {
                   >
                     {!item.notified && (
                       <>
-                        <Bell color={'#16a34a'} />
-                        <Text style={{ color: '#16a34a', fontWeight: 'bold' }}>Get notified</Text>
+                        <Bell color={styles.accent.color} />
+                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>Get notified</Text>
                       </>
                     )}
                     {item.notified && (
                       <>
-                        <BellOff color={'#16a34a'} />
-                        <Text style={{ color: '#16a34a', fontWeight: 'bold' }}>Unsubscribe</Text>
+                        <BellOff color={styles.accent.color} />
+                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>Unsubscribe</Text>
                       </>
                     )}
                   </Row>
@@ -169,7 +170,7 @@ const SocialThings = ({ navigation }: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           padding: 15,
-          backgroundColor: '#16a34a',
+          backgroundColor: styles.accent.backgroundColor,
           borderRadius: 15,
           position: 'absolute',
           right: 16,
@@ -190,7 +191,7 @@ const SocialThings = ({ navigation }: any) => {
     <Column styles={{ flex: 1 }}>
       <LoadingOverlay visible={logic.loading} />
       <ScrollView
-        style={styles.container}
+        style={styles.socialThingContainer}
         contentContainerStyle={{ paddingBottom: 80 }}
         refreshControl={<RefreshControl refreshing={logic.refreshing} onRefresh={logic.getSocialThings} />}
       >
@@ -205,12 +206,3 @@ const SocialThings = ({ navigation }: any) => {
 };
 
 export default SocialThings;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 30,
-    paddingVertical: 20,
-    paddingHorizontal: 23
-  }
-});

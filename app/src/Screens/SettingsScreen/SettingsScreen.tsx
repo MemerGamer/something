@@ -44,7 +44,7 @@ const SettingsScreen = ({ navigation }: any) => {
       <MyButton accent smalltext text="Request Organization Role" onPress={logic.handleRequestOrganizationRole} />
       <Row styles={{ justifyContent: 'space-between', alignItems: 'center', gap: 5 }}>
         <MyButton accent smalltext text="Light" onPress={logic.handleToggleTheme} />
-        <MyButton accent smalltext text="Dark" backgroundColor="black" onPress={logic.handleToggleTheme} />
+        <MyButton accent smalltext text="Dark" onPress={logic.handleToggleTheme} />
         <MyButton accent smalltext text="System" onPress={logic.handleToggleTheme} />
       </Row>
       <Column

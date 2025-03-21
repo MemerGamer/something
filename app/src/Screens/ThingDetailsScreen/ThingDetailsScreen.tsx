@@ -11,8 +11,10 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import MyButton from '../../components/molecules/MyButton';
 import { DateTime } from 'luxon';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const ThingDetailsScreen = ({ route, navigation }: any) => {
+  const styles = useThemedStyles();
   const { getDetails, thing, refreshing } = useThingDetailsScreenLogic();
   const { thingId, streakCount } = route.params;
 
@@ -115,7 +117,7 @@ const ThingDetailsScreen = ({ route, navigation }: any) => {
               styles={{
                 paddingHorizontal: 10,
                 paddingVertical: 8,
-                backgroundColor: '#16a34a',
+                backgroundColor: styles.accent.backgroundColor,
                 borderRadius: 10,
                 width: 'auto',
                 alignSelf: 'flex-start'

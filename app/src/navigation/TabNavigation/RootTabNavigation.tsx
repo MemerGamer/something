@@ -6,13 +6,15 @@ import { AuthStackNavigation } from '../StackNavigation/AuthStack';
 import { Home, User, Users } from 'react-native-feather';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core';
 import { ProfileStackNavigation } from '../StackNavigation/ProfileStack';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { SocialStackNavigation } from '../StackNavigation/SocialStack';
+import { ThemeContext } from '../../contexts/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 
 export const RootTabNavigation = () => {
   const { loading, user, signInSilently } = useRootNavigationLogic();
+  const { theme, colors, setAppMode } = useContext(ThemeContext);
 
   useEffect(() => {
     signInSilently();

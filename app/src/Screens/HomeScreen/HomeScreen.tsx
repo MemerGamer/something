@@ -1,5 +1,5 @@
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Column from '../../components/atoms/Column';
 import H2 from '../../components/atoms/H2';
 import { FlatList } from 'react-native-gesture-handler';
@@ -9,8 +9,10 @@ import { useHomeScreenLogic } from './HomeScreen.logic';
 import { Plus } from 'react-native-feather';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import { useNotifications } from '../../hooks/notifications';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const HomeScreen = ({ navigation }: any) => {
+  const styles = useThemedStyles();
   useNotifications();
 
   const logic = useHomeScreenLogic();
@@ -47,7 +49,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   const renderOtherThings = () => {
     if (logic.otherThings.home.length === 0) {
-      return <Text>None of yor friends uploaded anything yet</Text>;
+      return <Text>None of your friends uploaded anything yet</Text>;
     }
 
     return (
@@ -71,7 +73,7 @@ const HomeScreen = ({ navigation }: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           padding: 15,
-          backgroundColor: '#16a34a',
+          backgroundColor: styles.accent.backgroundColor,
           borderRadius: 15,
           position: 'absolute',
           right: 16,
@@ -91,7 +93,7 @@ const HomeScreen = ({ navigation }: any) => {
   return (
     <Column styles={{ flex: 1 }}>
       <ScrollView
-        style={styles.container}
+        style={styles.homeContainer}
         refreshControl={<RefreshControl refreshing={logic.refreshing} onRefresh={logic.getHomeThings} />}
       >
         <H2>
@@ -110,12 +112,3 @@ const HomeScreen = ({ navigation }: any) => {
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 30,
-    paddingVertical: 20,
-    paddingHorizontal: 23
-  }
-});

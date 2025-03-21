@@ -7,9 +7,12 @@ import { navigationRef } from './src/navigation/RootNavigation';
 import { useFonts } from 'expo-font';
 // import { usePushNotifications } from './src/hooks/notifications';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
+import {ThemeProvider } from './src/contexts/ThemeContext';
+import { useThemedStyles } from './src/hooks/useThemedStyles';
 
 export default function App() {
   // const { expoPushToken, notification, lastNotificationResponse } = usePushNotifications();
+  const styles = useThemedStyles();
 
   const [fontsLoaded] = useFonts({
     'Cursive-Regular': require('./assets/fonts/CedarvilleCursive-Regular.ttf'),
@@ -19,18 +22,14 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <Provider store={store}>
-        <NavigationContainer ref={navigationRef}>
-          <AlertNotificationRoot>
-            <RootNavigation />
-          </AlertNotificationRoot>
-        </NavigationContainer>
+        <ThemeProvider>
+          <NavigationContainer ref={navigationRef}>
+            <AlertNotificationRoot>
+              <RootNavigation />
+            </AlertNotificationRoot>
+          </NavigationContainer>
+        </ThemeProvider>
       </Provider>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-});

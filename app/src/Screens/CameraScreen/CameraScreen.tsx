@@ -13,6 +13,7 @@ import ApiService, { ApiResponse } from '../../services/ApiService';
 import Column from '../../components/atoms/Column';
 import * as Icons from 'react-native-feather';
 import Label from '../../components/atoms/Label';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const api = new ApiService();
 
@@ -31,6 +32,7 @@ const RewardDisplay = ({
   reward: ApiResponse<typeof api.client.images.upload.$post, 200>;
   navigation: any;
 }) => {
+  const styles = useThemedStyles();
   const points = reward.points.reduce((sum, point) => sum + point.value, 0);
   const readableReason = {
     ['OFF_SCHEDULE']: 'being off schedule',
@@ -58,7 +60,7 @@ const RewardDisplay = ({
 
         <Column styles={{ gap: 5, marginTop: 20 }}>
           {reward.points.map((point, id) => (
-            <Row key={id} styles={{ backgroundColor: '#16a34a', padding: 8, borderRadius: 5 }}>
+            <Row key={id} styles={{ backgroundColor: styles.accent.backgroundColor, padding: 8, borderRadius: 5 }}>
               <Text style={{ color: 'white' }}>
                 <Text style={{ fontWeight: 'bold' }}>{point.value} </Text> for {readableReason[point.reason]}
               </Text>
@@ -85,10 +87,10 @@ const RewardDisplay = ({
                   gap: 5,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: styles.column.backgroundColor,
                   padding: 10,
                   borderRadius: 10,
-                  borderColor: '#f0f0f0',
+                  borderColor: styles.column.borderColor,
                   borderWidth: 1,
                   marginTop: 5
                 }}
@@ -133,7 +135,7 @@ const RewardDisplay = ({
             width: '100%',
             height: 5,
             marginTop: 5,
-            backgroundColor: '#f0f0f0',
+            backgroundColor: styles.column.backgroundColor,
             borderRadius: 20,
             alignItems: 'flex-start',
             justifyContent: 'center'
@@ -143,7 +145,7 @@ const RewardDisplay = ({
             styles={{
               height: '100%',
               width: `${calculatePointPercentage(reward)}%`,
-              backgroundColor: '#16a34a',
+              backgroundColor: styles.column.backgroundColor,
               borderRadius: 20
             }}
           />
@@ -156,6 +158,7 @@ const RewardDisplay = ({
 };
 
 export default function CameraScreen({ route, navigation }: any) {
+  const styles = useThemedStyles();
   const [permission, requestPermission] = useCameraPermissions();
   const [capturingImage, setCapturingImage] = useState(true);
   const [facing, setFacing] = useState<'front' | 'back'>('front');
@@ -242,7 +245,7 @@ export default function CameraScreen({ route, navigation }: any) {
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View style={[styles.container, { justifyContent: 'center', gap: 20 }]}>
+      <View style={[styles.cameraContainer, { justifyContent: 'center', gap: 20 }]}>
         <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
         <MyButton text={'Grant permission'} onPress={requestPermission} accent />
       </View>
@@ -254,7 +257,7 @@ export default function CameraScreen({ route, navigation }: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.cameraContainer}>
       {!capturedPicture && (
         <CameraView
           onCameraReady={() => setCapturingImage(false)}
@@ -287,7 +290,7 @@ export default function CameraScreen({ route, navigation }: any) {
               width: cameraWidth,
               height: cameraHeight,
               resizeMode: 'contain',
-              backgroundColor: '#a5d1b5',
+              backgroundColor: styles.image.backgroundColor,
               borderRadius: 5
             }
           ]}
@@ -324,70 +327,3 @@ export default function CameraScreen({ route, navigation }: any) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
-  },
-  camera: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    zIndex: 2,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 50
-  },
-  button: {
-    marginTop: 20
-  },
-  shutter: {
-    width: 70,
-    height: 70,
-    borderRadius: 100,
-    borderWidth: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 50,
-    marginRight: 20,
-    marginLeft: 50
-  },
-  send: {
-    width: 100,
-    height: 50,
-    flexDirection: 'row',
-    gap: 10,
-    borderWidth: 2,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 50,
-    marginRight: 20
-  },
-  retake: {
-    width: 100,
-    height: 50,
-    flexDirection: 'row',
-    gap: 10,
-    borderWidth: 2,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 50,
-    marginRight: 20,
-    marginLeft: 20
-  },
-  change: {
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10
-  }
-});

@@ -10,5 +10,3 @@ const Spacer = ({ space }: SpacerProps) => {
 };
 
 export default Spacer;
-
-const styles = StyleSheet.create({});

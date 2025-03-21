@@ -4,14 +4,18 @@ import CreateThingScreen from '../../Screens/CreateThingScreen/CreateThingScreen
 import SetTimeIntervals from '../../Screens/CreateThingScreen/SetTimeIntervals';
 import CameraScreen from '../../Screens/CameraScreen/CameraScreen';
 import ThingDetailsScreen from '../../Screens/ThingDetailsScreen/ThingDetailsScreen';
+import { useContext } from 'react';
+import { ThemeContext } from '../../contexts/ThemeContext';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const HomeStack = createStackNavigator();
 
 export const HomeStackNavigation = () => {
+  const styles = useThemedStyles();
   return (
     <HomeStack.Navigator
       screenOptions={{
-        cardStyle: { backgroundColor: 'white' },
+        cardStyle: styles.container,
         headerShown: false
       }}
     >
