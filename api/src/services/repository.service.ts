@@ -9,6 +9,7 @@ import { StreakRepository } from '../repositories/streak.repository.js';
 import { ThingRepository } from '../repositories/thing.repository.js';
 import { UserRepository } from '../repositories/user.repository.js';
 import { LeaderboardRepository } from '../repositories/leaderboard.repository.js';
+import { RequestTypeRepository } from '../repositories/request-type.repository.js';
 
 export class RepositoryService {
   public readonly user = new UserRepository();
@@ -22,4 +23,5 @@ export class RepositoryService {
   public readonly access = new AccessRepository();
   public readonly notification = new NotificationRepository();
   public readonly leaderboard = new LeaderboardRepository();
+  public readonly requestType = new RequestTypeRepository();
 }
