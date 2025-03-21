@@ -27,4 +27,11 @@ export class RequestTypeService extends BaseService {
     const [newRequest] = await this.repositories.requestType.createRequest(userId, requestedType);
     return newRequest;
   }
+
+  /**
+   * Get user type by ID
+   */
+  public async getUserType(userId: string) {
+    return this.repositories.user.getTypeById(userId);
+  }
 }

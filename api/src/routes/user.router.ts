@@ -8,7 +8,8 @@ import {
   UserProfileModel,
   usernameExists,
   userTypeRequest,
-  updateUsername
+  updateUsername,
+  userType
 } from './user.definition.js';
 import { ClientError, zodErrorHandler } from '../utils/errors.js';
 import { ThingService } from '../services/thing.service.js';
@@ -41,6 +42,14 @@ export const userRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
       level
     };
     return c.json(result, StatusCodes.OK);
+  })
+  .openapi(userType, async (c) => {
+    const userId = c.get('jwtPayload').id;
+    const type = await requestTypeService.getUserType(userId);
+    if (!type) {
+      return c.text(reasonPhrase(StatusCodes.NOT_FOUND), StatusCodes.NOT_FOUND);
+    }
+    return c.json({ type }, StatusCodes.OK);
   })
 
   .openapi(userBadges, async (c) => {
