@@ -115,3 +115,42 @@ export const usernameExists = createRoute({
     }
   }
 });
+
+export const userTypeRequest = createRoute({
+  method: 'post',
+  path: '/me/type-request',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: 'Request user type change to organization',
+  tags: ['User'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              type: z.enum(['user', 'organization']).default('organization')
+            })
+            .optional()
+        }
+      }
+    }
+  },
+  responses: {
+    [StatusCodes.OK]: {
+      ...jsonc(
+        z.object({
+          message: z.string(),
+          requestId: z.string()
+        })
+      ),
+      description: `User type change request created successfully.`
+    },
+    [StatusCodes.BAD_REQUEST]: {
+      description: 'User already has pending request or invalid request.'
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occurred.'
+    }
+  }
+});

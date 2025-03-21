@@ -6,18 +6,21 @@ import {
   userProfile,
   toggleLeaderboardVisibility,
   UserProfileModel,
-  usernameExists
+  usernameExists,
+  userTypeRequest
 } from './user.definition.js';
-import { zodErrorHandler } from '../utils/errors.js';
+import { ClientError, zodErrorHandler } from '../utils/errors.js';
 import { ThingService } from '../services/thing.service.js';
 import { RewardService } from '../services/reward.service.js';
 import { LeaderboardService } from '../services/leaderboard.service.js';
 import { AuthService } from '../services/auth.service.js';
+import { RequestTypeService } from '../services/request-type.service.js';
 
 const thingService = new ThingService();
 const rewardService = new RewardService();
 const leaderboardService = new LeaderboardService();
 const authservice = new AuthService();
+const requestTypeService = new RequestTypeService();
 
 export const userRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(userProfile, async (c) => {
@@ -65,5 +68,26 @@ export const userRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
       return c.text(reasonPhrase(StatusCodes.OK), StatusCodes.OK);
     } else {
       return c.text(reasonPhrase(StatusCodes.NOT_FOUND), StatusCodes.NOT_FOUND);
+    }
+  })
+  .openapi(userTypeRequest, async (c) => {
+    const userId = c.get('jwtPayload').id;
+    const body = await c.req.json().catch(() => ({}));
+    const requestedType = body?.type || 'organization';
+
+    try {
+      const request = await requestTypeService.createTypeChangeRequest(userId, requestedType);
+      return c.json(
+        {
+          message: `Your request to change account type to ${requestedType} has been submitted.`,
+          requestId: request.id
+        },
+        StatusCodes.OK
+      );
+    } catch (error) {
+      if (error instanceof ClientError) {
+        return c.json({ error: error.message }, StatusCodes.BAD_REQUEST);
+      }
+      throw error;
     }
   });

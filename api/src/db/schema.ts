@@ -43,6 +43,18 @@ export const UserTable = pgTable(
   })
 );
 
+export const RequestTypeTable = pgTable('request_type', {
+  id: uuid('id').defaultRandom().notNull().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => UserTable.id),
+  type: text('type', { enum: ['user', 'organization'] })
+    .notNull()
+    .default(check(`'user'`, `type IN ('user', 'organization')`)),
+  approved: boolean('approved').notNull().default(false),
+  ...timechangeColumns
+});
+
 export const SessionTable = pgTable(
   'session',
   {
