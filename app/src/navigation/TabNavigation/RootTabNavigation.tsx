@@ -32,13 +32,13 @@ export const RootTabNavigation = () => {
         name="HomeStack"
         component={HomeStackNavigation}
         options={({ route }) => ({
-          tabBarStyle: ((route) => {
+          tabBarStyle: (() => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? '';
             if (['Camera', 'CreateThing', 'Details', 'SetTime'].includes(routeName)) {
               return { display: 'none' };
             }
             return;
-          })(route),
+          })(),
           title: 'Home',
           tabBarIcon: ({ color, size }) => <Home color={color} />
         })}
@@ -47,13 +47,13 @@ export const RootTabNavigation = () => {
         name="SocialStack"
         component={SocialStackNavigation}
         options={({ route }) => ({
-          tabBarStyle: ((route) => {
+          tabBarStyle: (() => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? '';
             if (['Camera', 'CreateSocialThing', 'SocialDetails', 'SetSocialTime'].includes(routeName)) {
               return { display: 'none' };
             }
             return;
-          })(route),
+          })(),
           title: 'Social',
           tabBarIcon: ({ color, size }) => <Users color={color} />
         })}
@@ -62,13 +62,13 @@ export const RootTabNavigation = () => {
         name="ProfileStack"
         component={ProfileStackNavigation}
         options={({ route }) => ({
-          tabBarStyle: ((route) => {
+          tabBarStyle: (() => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? '';
             if (['Leaderboard', 'Details'].includes(routeName)) {
               return { display: 'none' };
             }
             return;
-          })(route),
+          })(),
           title: 'Profile',
           tabBarIcon: ({ color, size }) => <User color={color} />
         })}

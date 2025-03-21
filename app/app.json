@@ -24,17 +24,21 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.p1ritos.something",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "4c893b8c-c687-40ec-98b8-a240f8b40b1f"
+        "projectId": "7decebcc-cde7-435d-bb33-01d278e19196"
       }
     },
-    "owner": "szabinagy",
+    "owner": "kbalinthunor",
     "plugins": [
       [
         "expo-camera",

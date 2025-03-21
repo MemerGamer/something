@@ -139,7 +139,7 @@ const ProfileScreen = ({ navigation }: any) => {
                   borderWidth: 1
                 }}
               >
-                <Icon color={'black'} />
+                {Icon ? <Icon color={'black'} /> : <Text>No icon for this badge: {item.icon}</Text>}
                 <Label text={item.name} />
               </Column>
             );
@@ -209,6 +209,5 @@ const ProfileScreen = ({ navigation }: any) => {
   );
 };
 
-export default ProfileScreen;
-
 const styles = StyleSheet.create({});
+export default ProfileScreen;

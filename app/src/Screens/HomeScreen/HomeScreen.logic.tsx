@@ -11,8 +11,8 @@ export const useHomeScreenLogic = () => {
   const getTodaysThingsPreview = async () => {
     try {
       await dispatch(getUserThingsToday());
-    } catch (error) {
-      console.log('Dispatch error: ', error);
+    } catch (err) {
+      console.error('Dispatch error: ', err);
       dispatch(logout());
     }
   };

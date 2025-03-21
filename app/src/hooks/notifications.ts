@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { useEffect, useRef, useState } from 'react';
 import { AppState, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { defineTask } from 'expo-task-manager';
@@ -203,9 +204,9 @@ export const useNotifications = () => {
     // addNotificationResponseReceivedListener -- adds a listener called whenever user interacts with a notification
     // Foreground & Background & Killed
     console.log(`${Platform.OS} Creating responseListener`);
-    responseListener.current = addNotificationResponseReceivedListener((response) => {
-      setResponse(response);
-      const data = response.notification.request.content.data;
+    responseListener.current = addNotificationResponseReceivedListener((notificationResponse) => {
+      setResponse(notificationResponse);
+      const data = notificationResponse.notification.request.content.data;
       console.log('[Notifications responseListener] %s', JSON.stringify(data, null, 2));
       navigate('Camera', data);
     });

@@ -38,7 +38,7 @@ const RewardDisplay = ({
     ['STREAK_KEPT']: 'keeping your streak',
     ['SOCIAL']: 'being social'
   };
-  const Icon = reward.badge ? Icons[reward.badge.icon as keyof typeof Icons] : Icons['Activity'];
+  const Icon = reward.badge ? Icons[reward.badge.icon as keyof typeof Icons] : Icons.Activity;
 
   return (
     <Column
@@ -219,7 +219,7 @@ export default function CameraScreen({ route, navigation }: any) {
 
       console.log('[CameraScreen] reward ', JSON.stringify(_reward, null, 2));
       setCapturingImage(false);
-      setReward(_reward);
+      setReward(_reward as ApiResponse<typeof api.client.images.upload.$post, 200>);
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,

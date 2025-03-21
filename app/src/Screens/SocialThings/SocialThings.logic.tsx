@@ -26,8 +26,8 @@ export const useSocialThingsLogic = () => {
         const _socialThings = await response.json();
         setSocialThings(_socialThings);
       }
-    } catch (error) {
-      console.log('Dispatch error: ', error);
+    } catch (err) {
+      console.error('Dispatch error: ', err);
       dispatch(logout());
     }
     setRefreshing(false);
