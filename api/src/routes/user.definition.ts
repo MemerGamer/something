@@ -37,6 +37,24 @@ export const userProfile = createRoute({
   }
 });
 
+export const userType = createRoute({
+  method: 'get',
+  path: '/me/type',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: 'Retrieve user type.',
+  tags: ['User'],
+  responses: {
+    [StatusCodes.OK]: {
+      ...textc(z.string()),
+      description: `User's type.`
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occured.'
+    }
+  }
+});
+
 export const userBadges = createRoute({
   method: 'get',
   path: '/me/badges',
