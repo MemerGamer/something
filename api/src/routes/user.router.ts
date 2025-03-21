@@ -7,7 +7,8 @@ import {
   toggleLeaderboardVisibility,
   UserProfileModel,
   usernameExists,
-  userTypeRequest
+  userTypeRequest,
+  updateUsername
 } from './user.definition.js';
 import { ClientError, zodErrorHandler } from '../utils/errors.js';
 import { ThingService } from '../services/thing.service.js';
@@ -81,6 +82,44 @@ export const userRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
         {
           message: `Your request to change account type to ${requestedType} has been submitted.`,
           requestId: request.id
+        },
+        StatusCodes.OK
+      );
+    } catch (error) {
+      if (error instanceof ClientError) {
+        return c.json({ error: error.message }, StatusCodes.BAD_REQUEST);
+      }
+      throw error;
+    }
+  })
+  .openapi(updateUsername, async (c) => {
+    const userId = c.get('jwtPayload').id;
+    const { username } = c.req.valid('json');
+
+    try {
+      // Check if username is valid format
+      if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        return c.json(
+          {
+            error: 'Username can only contain letters, numbers, and underscores'
+          },
+          StatusCodes.BAD_REQUEST
+        );
+      }
+
+      // Update the username
+      await authservice.updateUsername(userId, username);
+
+      const tokenPair = authservice.generateTokenPair({
+        username: username,
+        id: userId
+      });
+
+      return c.json(
+        {
+          message: 'Username updated successfully',
+          newUsername: username,
+          accessToken: tokenPair.accessToken
         },
         StatusCodes.OK
       );

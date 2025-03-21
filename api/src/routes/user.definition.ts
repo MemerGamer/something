@@ -154,3 +154,42 @@ export const userTypeRequest = createRoute({
     }
   }
 });
+
+export const updateUsername = createRoute({
+  method: 'patch',
+  path: '/me/username',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: "Update the current user's username",
+  tags: ['User'],
+  request: {
+    body: jsonc(
+      z.object({
+        username: z.string().min(3).max(20)
+      })
+    )
+  },
+  responses: {
+    [StatusCodes.OK]: {
+      ...jsonc(
+        z.object({
+          message: z.string(),
+          newUsername: z.string(),
+          accessToken: z.string()
+        })
+      ),
+      description: 'Username updated successfully'
+    },
+    [StatusCodes.BAD_REQUEST]: {
+      ...jsonc(
+        z.object({
+          error: z.string()
+        })
+      ),
+      description: 'Invalid request or username already exists'
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occurred.'
+    }
+  }
+});

@@ -44,4 +44,8 @@ export class UserRepository {
   public async getUserIds(usernames: string[], tx: DrizzleDatabaseSession | DrizzleTransactionSession = db) {
     return tx.select({ userId: UserTable.id }).from(UserTable).where(inArray(UserTable.username, usernames));
   }
+
+  public async updateUsername(userId: string, username: string) {
+    return db.update(UserTable).set({ username }).where(eq(UserTable.id, userId));
+  }
 }
