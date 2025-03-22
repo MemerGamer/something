@@ -2,13 +2,11 @@ import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Column from '../../components/atoms/Column';
 import { useSettingsScreenLogic } from './SettingsScreen.logic';
 import { useEffect, useState } from 'react';
-import { useEffect, useState } from 'react';
 import H1 from '../../components/atoms/H1';
 import H3 from '../../components/atoms/H3';
 import Row from '../../components/atoms/Row';
 import MyButton from '../../components/molecules/MyButton';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
-import LabeledInput from '../../components/organisms/TextInputWithLabel';
 import LabeledInput from '../../components/organisms/TextInputWithLabel';
 
 const SettingsScreen = ({ navigation }: any) => {

@@ -8,12 +8,6 @@ import {
   postUsernameChangeRequest,
   settingsSelector
 } from '../../redux/settings/SettingsStack';
-import {
-  getUserType,
-  postTypeRequest,
-  postUsernameChangeRequest,
-  settingsSelector
-} from '../../redux/settings/SettingsStack';
 import { RootState } from '../../redux/store';
 
 export const useSettingsScreenLogic = () => {
