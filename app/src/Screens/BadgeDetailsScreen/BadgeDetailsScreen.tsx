@@ -9,6 +9,30 @@ const BadgeDetailsScreen = ({ route }: any) => {
   const styles = useThemedStyles();
   const { badge } = route.params;
 
+  const calculatePointPercentage = (progress: any) => {
+    // If the badge is already earned, return 100%
+    console.log('badge.progress', progress);
+    if (progress === 1) {
+      return 100;
+    }
+
+    // If there's no progress data, return 0%
+    if (!progress) {
+      return 0;
+    }
+
+    const required = 1;
+
+    // Ensure we don't exceed 100% or go below 0%
+    const percentage = Math.min(100, Math.max(0, (progress / required) * 100));
+
+    // Return percentage, default to 0 if it's NaN
+    return isNaN(percentage) ? 0 : percentage;
+  };
+
+  // Calculate the width percentage as a number
+  const progressWidth = calculatePointPercentage(badge.progress);
+
   return (
     <Column
       styles={{
@@ -33,6 +57,38 @@ const BadgeDetailsScreen = ({ route }: any) => {
         )}
       </View>
       <Text style={{ marginTop: 20, textAlign: 'center', color: styles.text.color }}>{badge.description}</Text>
+      {/* Progress bar */}
+      <Column
+        styles={{
+          marginTop: 20,
+          width: '100%',
+          height: 5,
+          backgroundColor: styles.column.backgroundColor,
+          borderRadius: 20,
+          alignItems: 'flex-start',
+          justifyContent: 'center'
+        }}
+      >
+        <Column
+          styles={{
+            height: '100%',
+            width: `${progressWidth}%`,
+            backgroundColor: styles.accent.backgroundColor,
+            borderRadius: 20
+          }}
+        />
+      </Column>
+
+      {/* Optional: Display progress text */}
+      {badge.progress !== undefined && !badge.earned && (
+        <Text style={{ marginTop: 10, textAlign: 'center', color: styles.text.color }}>
+          Progress: {Math.round(badge.progress * 100)}%
+        </Text>
+      )}
+
+      {badge.earned && (
+        <Text style={{ marginTop: 10, textAlign: 'center', color: styles.accent.backgroundColor }}>Badge Earned!</Text>
+      )}
     </Column>
   );
 };
