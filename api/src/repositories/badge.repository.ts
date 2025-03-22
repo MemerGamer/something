@@ -1,7 +1,7 @@
 import { except } from 'drizzle-orm/pg-core';
 import { DrizzleDatabaseSession, DrizzleTransactionSession, db } from '../db/db.js';
 import { BadgeDefinitionTable, BadgeTable } from '../db/schema.js';
-import { InferInsertModel, and, desc, eq, lte } from 'drizzle-orm';
+import { InferInsertModel, and, eq, lte } from 'drizzle-orm';
 
 export class BadgeRepository {
   /**
@@ -61,21 +61,66 @@ export class BadgeRepository {
   }
 
   public async getUserBadges(userId: string, limit: number | undefined = undefined) {
-    const query = db
+    // First, get all badge definitions
+    const allBadgeDefinitions = await db
       .select({
+        id: BadgeDefinitionTable.id,
         icon: BadgeDefinitionTable.icon,
         name: BadgeDefinitionTable.name,
         description: BadgeDefinitionTable.description
       })
-      .from(BadgeTable)
-      .innerJoin(BadgeDefinitionTable, eq(BadgeDefinitionTable.id, BadgeTable.badgeDefinitionId))
-      .where(eq(BadgeTable.userId, userId))
-      .orderBy(desc(BadgeTable.createdAt));
+      .from(BadgeDefinitionTable);
 
+    // Then, get the badges that the user has earned
+    const earnedBadges = await db
+      .select({
+        badgeDefinitionId: BadgeTable.badgeDefinitionId,
+        createdAt: BadgeTable.createdAt
+      })
+      .from(BadgeTable)
+      .where(eq(BadgeTable.userId, userId));
+
+    // Create a map of earned badge definition IDs for quick lookup
+    // In case of duplicates, keep the most recent one
+    const earnedBadgeMap = new Map();
+    earnedBadges.forEach((badge) => {
+      const existing = earnedBadgeMap.get(badge.badgeDefinitionId);
+      if (!existing || new Date(badge.createdAt) > new Date(existing.earnedAt)) {
+        earnedBadgeMap.set(badge.badgeDefinitionId, {
+          earned: true,
+          earnedAt: badge.createdAt
+        });
+      }
+    });
+
+    // Combine the results - all badge definitions with earned status
+    // Each badge definition will appear exactly once
+    let result = allBadgeDefinitions.map((badgeDef) => {
+      const earnedInfo = earnedBadgeMap.get(badgeDef.id) || { earned: false };
+      return {
+        ...badgeDef,
+        earned: earnedInfo.earned,
+        earnedAt: earnedInfo.earnedAt
+      };
+    });
+
+    // Sort by earnedAt (descending) for earned badges, then non-earned badges
+    result.sort((a, b) => {
+      if (a.earned && b.earned) {
+        return new Date(b.earnedAt).getTime() - new Date(a.earnedAt).getTime();
+      } else if (a.earned) {
+        return -1; // a is earned, b is not, so a comes first
+      } else if (b.earned) {
+        return 1; // b is earned, a is not, so b comes first
+      }
+      return 0; // neither is earned, keep original order
+    });
+
+    // Apply limit if specified
     if (limit) {
-      return query.limit(limit);
-    } else {
-      return query;
+      result = result.slice(0, limit);
     }
+
+    return result;
   }
 }

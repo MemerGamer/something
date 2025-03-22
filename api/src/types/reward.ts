@@ -15,7 +15,8 @@ export type StreakInfoModel = z.infer<typeof StreakInfoModel>;
 export const BadgeInfoModel = z.object({
   icon: z.string(),
   name: z.string(),
-  description: z.string()
+  description: z.string(),
+  earned: z.boolean().optional()
 });
 export type BadgeInfoModel = z.infer<typeof BadgeInfoModel>;
 
