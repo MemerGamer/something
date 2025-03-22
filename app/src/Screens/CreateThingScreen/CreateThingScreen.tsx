@@ -15,8 +15,10 @@ import LoadingOverlay from '../../components/organisms/LoadingOverlay';
 import { LinearGradient } from 'expo-linear-gradient';
 import ErrorText from '../../components/atoms/ErrorText';
 import { extractError } from '../../services/ApiService';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const CreateThingScreen = ({ navigation }: any) => {
+  const styles = useThemedStyles();
   const {
     thingName,
     setThingName,
@@ -135,7 +137,7 @@ const CreateThingScreen = ({ navigation }: any) => {
             pointerEvents="none"
             // Background Linear Gradient
             colors={['transparent', 'transparent', 'transparent', 'rgba(0,0,0,0.5)']}
-            style={[sharedUsernames.length >= 4 && styles.background, { borderRadius: 5 }]}
+            style={[sharedUsernames.length >= 4 && styles.container, { borderRadius: 5 }]}
           />
           <ScrollView style={{ height: 150, marginTop: 8 }}>
             <Column styles={{ gap: 10, paddingBottom: 10 }}>
