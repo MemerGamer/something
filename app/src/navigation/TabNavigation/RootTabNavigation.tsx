@@ -14,7 +14,7 @@ const Tab = createBottomTabNavigator();
 
 export const RootTabNavigation = () => {
   const { loading, user, signInSilently } = useRootNavigationLogic();
-  const { theme, colors, setAppMode } = useContext(ThemeContext);
+  const { theme, colors } = useContext(ThemeContext);
 
   useEffect(() => {
     signInSilently();
@@ -29,7 +29,17 @@ export const RootTabNavigation = () => {
   }
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: colors.background, // Ensure tab bar follows theme
+          borderTopColor: theme === 'dark' ? '#444' : '#ccc'
+        },
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: theme === 'dark' ? '#aaa' : '#555'
+      }}
+    >
       <Tab.Screen
         name="HomeStack"
         component={HomeStackNavigation}
@@ -39,10 +49,10 @@ export const RootTabNavigation = () => {
             if (['Camera', 'CreateThing', 'Details', 'SetTime'].includes(routeName)) {
               return { display: 'none' };
             }
-            return;
+            return { backgroundColor: colors.background };
           })(),
           title: 'Home',
-          tabBarIcon: ({ color, size }) => <Home color={color} />
+          tabBarIcon: ({ color }) => <Home color={color} />
         })}
       />
       <Tab.Screen
@@ -54,10 +64,10 @@ export const RootTabNavigation = () => {
             if (['Camera', 'CreateSocialThing', 'SocialDetails', 'SetSocialTime'].includes(routeName)) {
               return { display: 'none' };
             }
-            return;
+            return { backgroundColor: colors.background };
           })(),
           title: 'Social',
-          tabBarIcon: ({ color, size }) => <Users color={color} />
+          tabBarIcon: ({ color }) => <Users color={color} />
         })}
       />
       <Tab.Screen
@@ -69,10 +79,10 @@ export const RootTabNavigation = () => {
             if (['Leaderboard', 'Details'].includes(routeName)) {
               return { display: 'none' };
             }
-            return;
+            return { backgroundColor: colors.background };
           })(),
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => <User color={color} />
+          tabBarIcon: ({ color }) => <User color={color} />
         })}
       />
     </Tab.Navigator>
