@@ -127,7 +127,14 @@ export class ThingService extends BaseService {
   }
 
   public async getDetails(userId: string, thingId: string): Promise<ThingDetailsModel> {
-    const { name, description, type, userId: thingUserId } = await this.repositories.thing.getDetails(thingId);
+    const {
+      name,
+      description,
+      type,
+      userId: thingUserId,
+      join_code,
+      visibility
+    } = await this.repositories.thing.getDetails(thingId);
     const access = await this.repositories.access.getThingAccess(userId, thingId);
 
     if (type === 'personal') {
@@ -168,6 +175,8 @@ export class ThingService extends BaseService {
         schedule,
         sharedWith,
         images,
+        visibility: visibility ?? undefined,
+        joinCode: join_code ?? undefined,
         access: userId === thingUserId ? 'admin' : 'viewer'
       };
     }

@@ -118,6 +118,8 @@ export const ThingDetailsModel = z.object({
     id: true,
     name: true
   }).array(),
+  visibility: z.enum(['public', 'private']).optional(),
+  joinCode: z.string().optional(),
   access: z.enum(ThingAccessTable.role.enumValues)
 });
 export type ThingDetailsModel = z.infer<typeof ThingDetailsModel>;
