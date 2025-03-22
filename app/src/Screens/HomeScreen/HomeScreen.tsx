@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation }: any) => {
         {renderTodayThings()}
         <Spacer space={20} />
         <H2>
-          Other <H2 accent>Things</H2>
+          Friends <H2 accent>Things</H2>
         </H2>
         {renderOtherThings()}
       </ScrollView>

@@ -39,7 +39,9 @@ const SettingsScreen = ({ navigation }: any) => {
         gap: 10
       }}
     >
-      <H1>SetThings</H1>
+      <H1>
+        Set-<H1 accent>Things</H1>
+      </H1>
       <MyButton accent smalltext text="Change Username" onPress={logic.handleChangeUsername} />
       <MyButton accent smalltext text="Request Organization Role" onPress={logic.handleRequestOrganizationRole} />
       <Row styles={{ justifyContent: 'space-between', alignItems: 'center', gap: 5 }}>
