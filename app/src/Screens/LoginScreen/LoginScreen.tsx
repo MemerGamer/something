@@ -29,8 +29,8 @@ const LoginScreen = ({ navigation }: any) => {
           gap: 0
         }}
       >
-        <H1 customColor={'#404040'}>some</H1>
-        <H1 customColor={'#16a34a'}>thing</H1>
+        <H1>some</H1>
+        <H1 accent>thing</H1>
       </Row>
       <Column>
         <LabeledInput

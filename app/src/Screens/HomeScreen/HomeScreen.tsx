@@ -97,7 +97,7 @@ const HomeScreen = ({ navigation }: any) => {
         refreshControl={<RefreshControl refreshing={logic.refreshing} onRefresh={logic.getHomeThings} />}
       >
         <H2>
-          Today's <H2 accent>Things</H2>
+          Today's Latest <H2 accent>Things</H2>
         </H2>
         {renderTodayThings()}
         <Spacer space={20} />

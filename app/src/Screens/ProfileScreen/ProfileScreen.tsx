@@ -213,6 +213,7 @@ const ProfileScreen = ({ navigation }: any) => {
         {/* TODO:Fix two children with same key problem which occurs, because things are shared */}
         <FlatList
           scrollEnabled={false}
+          keyExtractor={(item) => item.id.toString()}
           data={opened ? logic.profile?.things : logic.profile?.things.slice(0, 3)}
           style={{ marginTop: 16 }}
           contentContainerStyle={{ gap: 5 }}

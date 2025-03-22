@@ -86,23 +86,13 @@ const ThingDetailsScreen = ({ route, navigation }: any) => {
       >
         <H1>{thing.name}</H1>
       </Row>
-      {thing.description && (
-        <Column
-          styles={{
-            gap: 16
-          }}
-        >
-          <H4>Description</H4>
-          <Text>{thing.description}</Text>
-        </Column>
-      )}
       <Row styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <H4>Streak</H4>
         <StreakChip streak={streakCount} />
       </Row>
       <Column>
         <H4>Schedule</H4>
-        <Text style={{ marginTop: 10 }}>{scheduleText()}</Text>
+        <Text style={{ marginTop: 10, color: styles.text.color }}>{scheduleText()}</Text>
       </Column>
       {thing.sharedWith.length > 0 && (
         <Column
@@ -128,6 +118,16 @@ const ThingDetailsScreen = ({ route, navigation }: any) => {
               </H3>
             </Column>
           ))}
+        </Column>
+      )}
+      {thing.description && (
+        <Column
+          styles={{
+            gap: 16
+          }}
+        >
+          <H4>Description</H4>
+          <Text style={{ color: styles.text.color }}>{thing.description}</Text>
         </Column>
       )}
       <Column>
