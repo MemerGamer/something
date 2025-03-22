@@ -85,7 +85,8 @@ export class ThingRepository {
       .innerJoin(ScheduleTable, eq(ThingTable.id, ScheduleTable.thingId))
       .innerJoin(StreakTable, eq(ThingTable.id, StreakTable.thingId))
       .innerJoin(ThingAccessTable, eq(ThingTable.id, ThingAccessTable.thingId))
-      .where(and(eq(ThingAccessTable.userId, userId), eq(ThingTable.type, 'personal')));
+      .where(and(eq(ThingAccessTable.userId, userId), eq(ThingTable.type, 'personal')))
+      .groupBy(ThingTable.id, ThingTable.name, ScheduleTable.startTime, ScheduleTable.endTime, StreakTable.count);
 
     if (limit) {
       return query.limit(limit);
