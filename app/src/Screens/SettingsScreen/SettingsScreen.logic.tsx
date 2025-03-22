@@ -1,15 +1,21 @@
-import { useContext, useState } from 'react';
-import { Appearance } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import { useAppSelector, useAppDispatch } from '../../hooks/hooks';
 import { authSelector, logout } from '../../redux/auth/AuthSlice';
-import { postTypeRequest, settingsSelector } from '../../redux/settings/SettingsStack';
+import { getUserType, postTypeRequest, settingsSelector } from '../../redux/settings/SettingsStack';
+import { RootState } from '../../redux/store';
 
 export const useSettingsScreenLogic = () => {
   const [requestSent, setRequestSent] = useState(false);
   const { useDeviceTheme, toggleTheme } = useContext(ThemeContext);
-  const { user } = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
+  const { userType, loading, error } = useAppSelector((state: RootState) => state.settingsReducer);
+
+  useEffect(() => {
+    dispatch(getUserType());
+  }, [dispatch]);
+
+  console.log('User Type:', userType);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -18,16 +24,29 @@ export const useSettingsScreenLogic = () => {
   const handleToggleTheme = toggleTheme;
 
   const handleRequestOrganizationRole = async () => {
-    if (requestSent) {
-      return;
-    }
-    await dispatch(postTypeRequest());
+    if (userType === 'user') {
+      if (requestSent) {
+        return;
+      }
+      await dispatch(postTypeRequest());
 
-    setRequestSent(true);
+      setRequestSent(true);
+    } else {
+      console.log(userType + 'cannot request organization role');
+    }
   };
 
   const handleChangeUsername = () => {};
 
   //   return { loading, error, user, settings };
-  return { user, handleLogout, handleToggleTheme, handleRequestOrganizationRole, handleChangeUsername, requestSent };
+  return {
+    handleLogout,
+    handleToggleTheme,
+    handleRequestOrganizationRole,
+    handleChangeUsername,
+    requestSent,
+    userType,
+    loading,
+    error
+  };
 };
