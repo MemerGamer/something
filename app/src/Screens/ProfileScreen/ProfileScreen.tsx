@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Column from '../../components/atoms/Column';
 import H1 from '../../components/atoms/H1';
@@ -7,14 +7,22 @@ import H2 from '../../components/atoms/H2';
 import { useProfileScreenLogic } from './ProfileScreen.logic';
 import Label from '../../components/atoms/Label';
 import Spacer from '../../components/atoms/Spacer';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-remix-icon';
 import H3 from '../../components/atoms/H3';
 import ThingCard from '../../components/molecules/ThingCard';
 import { Settings } from 'react-native-feather';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import ImageViewer from '../../components/molecules/ImageViewer';
+import { MasonryFlashList } from '@shopify/flash-list';
 
 type NonUndefined<T> = T extends undefined ? never : T;
+interface GalleryItem {
+  createdAt: string;
+  imageUrl: string;
+  thingId: string;
+  isSocial: boolean;
+}
 
 const ProfileScreen = ({ navigation }: any) => {
   const styles = useThemedStyles();
@@ -70,6 +78,20 @@ const ProfileScreen = ({ navigation }: any) => {
         />
       </Column>
     );
+  };
+
+  const handleImagePress = (item: { isSocial: boolean; thingId: any }) => {
+    if (item.isSocial) {
+      navigation.navigate('SocialThingDetailsScreen', {
+        thingId: item.thingId,
+        userCount: 0 // You might want to fetch this data
+      });
+    } else {
+      navigation.navigate('ThingDetailsScreen', {
+        thingId: item.thingId,
+        streakCount: 0 // You might need to fetch this data
+      });
+    }
   };
 
   return (
@@ -228,6 +250,45 @@ const ProfileScreen = ({ navigation }: any) => {
             />
           )}
         />
+      </Column>
+      <Column
+        styles={{
+          borderColor: styles.column.borderColor,
+          borderWidth: 1,
+          borderRadius: 8,
+          paddingHorizontal: 16,
+          paddingTop: 16,
+          paddingBottom: opened ? 16 : 5,
+          marginTop: 16,
+          marginBottom: 20,
+          width: '100%'
+        }}
+      >
+        {logic.galleryImages && logic.galleryImages.length > 0 ? (
+          <MasonryFlashList
+            data={logic.galleryImages}
+            numColumns={3}
+            estimatedItemSize={20} // Improves performance
+            keyExtractor={(item) => item.thingId}
+            // space between items
+            renderItem={({ item, index }) => (
+              <View style={[{ padding: 3, flex: 1 }]}>
+                <TouchableOpacity onPress={() => handleImagePress(item)}>
+                  <ImageViewer
+                    uri={item.imageUrl}
+                    username={logic.user?.username as string}
+                    createdAt={item.createdAt}
+                    simple={true}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        ) : (
+          <Text style={{ marginTop: 16, color: styles.text.color, textAlign: 'center', padding: 20 }}>
+            No memories captured yet
+          </Text>
+        )}
       </Column>
     </Column>
   );
