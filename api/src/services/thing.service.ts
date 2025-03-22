@@ -101,14 +101,15 @@ export class ThingService extends BaseService {
         const thing = await this.repositories.thing.getThingByJoinCode(joinCode, tx);
 
         if (!thing) {
-          throw new ClientError('Invalid join code');
+          return null;
         }
 
         // Check if user already has access
         const existingAccess = await this.repositories.access.getThingAccess(userId, thing.id, tx);
 
         if (existingAccess) {
-          throw new ClientError(`You already have access to this thing`);
+          console.warn(`User (${userId}) already has access to thing (${thing.id})`);
+          return { thingId: thing.id, name: thing.name };
         }
 
         // Give viewer access
