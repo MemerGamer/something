@@ -188,6 +188,26 @@ const ProfileScreen = ({ navigation }: any) => {
           data={logic.profile?.badges}
           horizontal
           contentContainerStyle={{ gap: 10, flexGrow: 1 }}
+          ListFooterComponent={
+            <TouchableOpacity onPress={() => navigation.navigate('BadgeScreen')}>
+              <Column
+                styles={{
+                  gap: 5,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: styles.column.backgroundColor,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: styles.accent.backgroundColor,
+                  borderWidth: 1,
+                  width: 75,
+                  height: 75
+                }}
+              >
+                <Text style={{ color: styles.accent.backgroundColor }}>See all badges</Text>
+              </Column>
+            </TouchableOpacity>
+          }
           renderItem={({ item }) => {
             return (
               <Column
@@ -198,16 +218,21 @@ const ProfileScreen = ({ navigation }: any) => {
                   backgroundColor: styles.column.backgroundColor,
                   padding: 10,
                   borderRadius: 10,
-                  borderColor: styles.column.borderColor,
-                  borderWidth: 1
+                  borderColor: item.earned ? styles.accent.backgroundColor : styles.column.borderColor,
+                  borderWidth: 1,
+                  width: 75,
+                  height: 75
                 }}
               >
                 {item.icon ? (
-                  <Icon name={item.icon as any} color={styles.text.color} />
+                  // if item.earned is false make the icon gray
+                  <Icon name={item.icon as any} color={item.earned ? styles.accent.backgroundColor : 'gray'} />
                 ) : (
                   <Text>No icon for this badge: {item.icon}</Text>
                 )}
-                <Label text={item.name} />
+                {item.name.split(' ').map((word: string, index: number) => (
+                  <Label key={index} text={word} />
+                ))}
               </Column>
             );
           }}

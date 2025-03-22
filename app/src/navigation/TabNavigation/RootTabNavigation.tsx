@@ -76,7 +76,7 @@ export const RootTabNavigation = () => {
         options={({ route }) => ({
           tabBarStyle: (() => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? '';
-            if (['Leaderboard', 'Details'].includes(routeName)) {
+            if (['Leaderboard', 'Details', 'BadgeScreen'].includes(routeName)) {
               return { display: 'none' };
             }
             return { backgroundColor: colors.background };

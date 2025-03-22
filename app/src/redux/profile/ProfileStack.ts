@@ -20,6 +20,7 @@ type InitialState = {
   message: string;
   loading: boolean;
   error: ApiError | undefined;
+  badges: any[];
 };
 
 const initialState: InitialState = {
@@ -30,7 +31,8 @@ const initialState: InitialState = {
   accessToken: '',
   message: '',
   loading: true,
-  error: undefined
+  error: undefined,
+  badges: []
 };
 
 const api = new ApiService();
@@ -125,6 +127,16 @@ export const changeUsername = createAsyncThunk(
   }
 );
 
+export const getBadges = createAsyncThunk('profile/getBadges', async (_, { rejectWithValue }) => {
+  const response = await api.call(api.client.user.me.badges.$get, {});
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  }
+
+  return rejectWithValue({});
+});
+
 const profileSlice = createSlice({
   name: 'profile',
   initialState,
@@ -193,6 +205,19 @@ const profileSlice = createSlice({
     builder.addCase(changeUsername.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as ApiError;
+    });
+
+    // getBadges
+    builder.addCase(getBadges.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getBadges.fulfilled, (state, action) => {
+      state.loading = false;
+      state.badges = action.payload;
+    });
+    builder.addCase(getBadges.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as any;
     });
   }
 });
