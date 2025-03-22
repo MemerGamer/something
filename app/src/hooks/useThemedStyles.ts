@@ -34,6 +34,16 @@ export const useThemedStyles = () => {
       color: colors.alwaysWhite,
       fontWeight: '600'
     },
+    userChip: {
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      borderRadius: 10,
+      backgroundColor: colors.accent
+    },
+    userChipText: {
+      color: colors.alwaysWhite,
+      fontWeight: '600'
+    },
     column: {
       backgroundColor: colors.secondary,
       borderColor: colors.secondaryBorder
@@ -226,6 +236,18 @@ export const useThemedStyles = () => {
       borderColor: colors.disabledBorder,
       backgroundColor: colors.disabledBackground,
       color: colors.disabledText
-    }
+    },
+    dropdown: {
+      height: 50,
+      borderColor: colors.secondary,
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      marginVertical: 10
+    },
+    placeholderStyle: { fontSize: 16 },
+    selectedTextStyle: { fontSize: 16, color: colors.text },
+    inputSearchStyle: { height: 40, fontSize: 16 },
+    iconStyle: { width: 20, height: 20 }
   });
 };

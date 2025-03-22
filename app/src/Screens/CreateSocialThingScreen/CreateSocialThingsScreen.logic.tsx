@@ -7,7 +7,8 @@ import {
   setNameForNewPersonalThing,
   setLocationForNewPersonalThing,
   thingSelector,
-  setUriForNewPersonalThing
+  setUriForNewPersonalThing,
+  setVisbilityForNewThing
 } from '../../redux/thing/ThingStack';
 import { authSelector } from '../../redux/auth/AuthSlice';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
@@ -23,6 +24,7 @@ export const useCreateThingScreenLogic = (navigation: any) => {
   const [currentSharedUsername, setCurrentSharedUsername] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [uri, setUri] = useState<string>('');
+  const [visibility, setVisibility] = useState<string>('public');
 
   const userState = useAppSelector(authSelector);
   const thingState = useAppSelector(thingSelector);
@@ -37,7 +39,7 @@ export const useCreateThingScreenLogic = (navigation: any) => {
     setLoading(false);
   };
 
-  const handleCanel = () => {
+  const handleCancel = () => {
     dispatch(resetNewPersonalThing());
     navigation.pop();
   };
@@ -59,8 +61,12 @@ export const useCreateThingScreenLogic = (navigation: any) => {
   }, [uri]);
 
   useEffect(() => {
+    dispatch(setVisbilityForNewThing(visibility));
+  }, [visibility]);
+
+  useEffect(() => {
     if (newThingSent) {
-      handleCanel();
+      handleCancel();
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         textBody: 'Thing created!'
@@ -115,13 +121,15 @@ export const useCreateThingScreenLogic = (navigation: any) => {
     setSharedUsernames,
     currentSharedUsername,
     setCurrentSharedUsername,
-    handleCanel,
+    handleCanel: handleCancel,
     handleUsernameAdd,
     loading,
     error,
     thingLocation,
     setThingLocation,
     setUri,
-    uri
+    uri,
+    visibility,
+    setVisibility
   };
 };

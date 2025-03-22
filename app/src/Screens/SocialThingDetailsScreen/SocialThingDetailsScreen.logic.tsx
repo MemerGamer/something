@@ -4,7 +4,7 @@ import ApiService, { ApiHeaders, ApiResponse } from '../../services/ApiService';
 const api = new ApiService();
 type ThingDTO = ApiResponse<(typeof api)['client']['things'][':uuid']['details']['$get'], 200>;
 
-export const useThingDetailsScreenLogic = () => {
+export const useSocialThingDetailsScreenLogic = () => {
   const [thing, setThing] = useState<ThingDTO | null>(null);
   const [refreshing, setRefreshing] = useState(true);
 

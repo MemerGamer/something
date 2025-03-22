@@ -7,9 +7,16 @@ import { AuthStackNavigation } from '../StackNavigation/AuthStack';
 import { Home, User, Users } from 'react-native-feather';
 import { getFocusedRouteNameFromRoute, Route } from '@react-navigation/core';
 import { ProfileStackNavigation } from '../StackNavigation/ProfileStack';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SocialStackNavigation } from '../StackNavigation/SocialStack';
 import { ThemeContext } from '../../contexts/ThemeContext';
+import { useProfileScreenLogic } from '../../Screens/ProfileScreen/ProfileScreen.logic';
+import { OrganizationHomeStackNavigation } from '../StackNavigation/OrganizationHomeStack';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { AsyncThunkAction } from '@reduxjs/toolkit';
+import { AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
+import { authSelector } from '../../redux/auth/AuthSlice';
+import ApiService from '../../services/ApiService';
 
 const Tab = createBottomTabNavigator();
 
@@ -89,7 +96,7 @@ export const RootTabNavigation = () => {
         <>
           <Tab.Screen
             name="SocialStack"
-            component={SocialStackNavigation}
+            component={OrganizationHomeStackNavigation}
             options={({ route }) => ({
               tabBarStyle: getTabBarStyle(route, ['Camera', 'CreateSocialThing', 'SocialDetails', 'SetSocialTime']),
               title: 'Home',

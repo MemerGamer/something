@@ -17,7 +17,7 @@ import H3 from '../../components/atoms/H3';
 import { Bell, BellOff, Plus, Users } from 'react-native-feather';
 import Row from '../../components/atoms/Row';
 import MyButton from '../../components/molecules/MyButton';
-import { useSocialThingsLogic } from './SocialThings.logic';
+import { useOrganizationThingsLogic } from './OrganizationThings.logic';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import ApiService from '../../services/ApiService';
@@ -52,9 +52,9 @@ const ImageView = ({ url }: { url: string }) => {
   return <Image key={url} style={{ height: '100%', width: '100%' }} source={{ uri: image }} />;
 };
 
-const SocialThings = ({ navigation }: any) => {
+const OrganizationThings = ({ navigation }: any) => {
   const styles = useThemedStyles();
-  const logic = useSocialThingsLogic();
+  const logic = useOrganizationThingsLogic();
   useEffect(() => {
     logic.getSocialThings();
   }, []);
@@ -74,7 +74,7 @@ const SocialThings = ({ navigation }: any) => {
 
   const renderSocialThings = () => (
     <FlatList
-      data={logic.socialThings}
+      data={logic.organizationThings}
       scrollEnabled={false}
       keyExtractor={(_, index) => index.toString()}
       renderItem={({ item }) => (
@@ -127,34 +127,6 @@ const SocialThings = ({ navigation }: any) => {
                   <Users color={styles.accent.color} />
                   <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>{item.userCount}</Text>
                 </Row>
-                <Pressable onPress={() => logic.toggleNotifications(item.id)}>
-                  <Row
-                    styles={{
-                      paddingVertical: 8,
-                      paddingHorizontal: 24,
-                      paddingLeft: 18,
-                      borderRadius: 5,
-                      borderWidth: 2,
-                      borderColor: styles.accent.borderColor,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 16
-                    }}
-                  >
-                    {!item.notified && (
-                      <>
-                        <Bell color={styles.accent.color} />
-                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>Get notified</Text>
-                      </>
-                    )}
-                    {item.notified && (
-                      <>
-                        <BellOff color={styles.accent.color} />
-                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>Unsubscribe</Text>
-                      </>
-                    )}
-                  </Row>
-                </Pressable>
               </Row>
             </Column>
           </Column>
@@ -180,7 +152,7 @@ const SocialThings = ({ navigation }: any) => {
         <Plus
           color={'white'}
           onPress={() => {
-            navigation.push('JoinSocialThing');
+            navigation.push('CreateSocialThing');
           }}
         />
       </Column>
@@ -205,4 +177,4 @@ const SocialThings = ({ navigation }: any) => {
   );
 };
 
-export default SocialThings;
+export default OrganizationThings;
