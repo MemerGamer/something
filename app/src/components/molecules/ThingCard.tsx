@@ -5,6 +5,7 @@ import H3 from '../atoms/H3';
 import Row from '../atoms/Row';
 import StreakChip from '../atoms/StreakChip';
 import { DateTime } from 'luxon';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type ThingCardProps = {
   name: string;
@@ -16,6 +17,7 @@ type ThingCardProps = {
 };
 
 const ThingCard = ({ navigation, name, startTime, endTime, streak, id }: ThingCardProps) => {
+  const styles = useThemedStyles();
   startTime = DateTime.fromFormat(startTime, 'hh:mm:ss', { zone: 'utc' })
     .toLocal()
     .toLocaleString({ hour: 'numeric', minute: 'numeric' });
@@ -29,12 +31,12 @@ const ThingCard = ({ navigation, name, startTime, endTime, streak, id }: ThingCa
         navigation && navigation.navigate('Details', { thingId: id, streakCount: streak });
       }}
     >
-      <Column styles={styles.container}>
+      <Column styles={styles.cardContainer}>
         <Row styles={{ justifyContent: 'space-between' }}>
           <H3>{name}</H3>
           <StreakChip streak={streak} />
         </Row>
-        <Text style={styles.time}>
+        <Text style={styles.cardTime}>
           {startTime} - {endTime}
         </Text>
       </Column>
@@ -43,17 +45,3 @@ const ThingCard = ({ navigation, name, startTime, endTime, streak, id }: ThingCa
 };
 
 export default ThingCard;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f5f5f5',
-    borderColor: '#e0e0e0',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 16
-  },
-  time: {
-    fontSize: 12,
-    color: '#404040'
-  }
-});

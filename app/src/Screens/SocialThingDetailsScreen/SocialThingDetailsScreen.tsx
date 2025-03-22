@@ -11,8 +11,11 @@ import { ChevronLeft, ChevronsLeft } from 'react-native-feather';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import MyButton from '../../components/molecules/MyButton';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { DateTime } from 'luxon';
 
 const SocialThingDetailsScreen = ({ route, navigation }: any) => {
+  const styles = useThemedStyles();
   const { getDetails, thing, refreshing } = useThingDetailsScreenLogic();
   const { thingId, userCount } = route.params;
 
@@ -33,6 +36,35 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
       </Column>
     );
   }
+
+  const scheduleText = () => {
+    if (!thing?.schedule) {
+      return 'Not set';
+    }
+
+    const startTime = DateTime.fromFormat(thing!.schedule!.startTime, 'hh:mm:ss', { zone: 'utc' })
+      .toLocal()
+      .toLocaleString({ hour: 'numeric', minute: 'numeric' });
+    const endTime = DateTime.fromFormat(thing!.schedule!.endTime, 'hh:mm:ss', { zone: 'utc' })
+      .toLocal()
+      .toLocaleString({ hour: 'numeric', minute: 'numeric' });
+
+    if (thing?.schedule.repeat === 'once') {
+      const readableDate = DateTime.fromISO(thing!.schedule.specificDate!).toLocaleString({
+        month: 'long',
+        day: 'numeric'
+      });
+      return `Once on ${readableDate}, from ${startTime} to ${endTime}`;
+    }
+    if (thing?.schedule.repeat === 'daily') {
+      return `Every day, from ${startTime} to ${endTime}`;
+    }
+    if (thing?.schedule.repeat === 'weekly') {
+      return `Every week on ${thing.schedule.dayOfWeek}, from ${startTime} to ${endTime}`;
+    }
+
+    return 'Not set';
+  };
 
   return (
     <Column
@@ -55,30 +87,23 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
       >
         <H1>{thing.name}</H1>
       </Row>
-      {thing.description && (
-        <Column
-          styles={{
-            gap: 10
-          }}
-        >
-          <H4>Description</H4>
-          <Text>{thing.description}</Text>
-        </Column>
-      )}
-
+      <Column>
+        <H4>Schedule</H4>
+        <Text style={{ marginTop: 10, color: styles.text.color }}>{scheduleText()}</Text>
+      </Column>
       <Column
         styles={{
           gap: 10
         }}
       >
-        <H4>People</H4>
+        <H4>People Joined ({userCount})</H4>
         {thing.sharedWith.map((shared) => (
           <Column
             key={shared}
             styles={{
               paddingHorizontal: 10,
               paddingVertical: 8,
-              backgroundColor: '#16a34a',
+              backgroundColor: styles.accent.backgroundColor,
               borderRadius: 10,
               width: 'auto',
               alignSelf: 'flex-start'
@@ -90,6 +115,16 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
           </Column>
         ))}
       </Column>
+      {thing.description && (
+        <Column
+          styles={{
+            gap: 10
+          }}
+        >
+          <H4>Description</H4>
+          <Text style={{ color: styles.text.color }}>{thing.description}</Text>
+        </Column>
+      )}
       <Column>
         <Row
           styles={{
@@ -138,5 +173,3 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
 };
 
 export default SocialThingDetailsScreen;
-
-const styles = StyleSheet.create({});

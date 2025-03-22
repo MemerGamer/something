@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Row from './Row';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type StreakChipProps = {
   streak: number;
 };
 
 const StreakChip = ({ streak }: StreakChipProps) => {
+  const styles = useThemedStyles();
   return (
     <Row styles={styles.streakChip}>
       <Text style={styles.streakChipText}>{streak} 🔥</Text>
@@ -15,16 +17,3 @@ const StreakChip = ({ streak }: StreakChipProps) => {
 };
 
 export default StreakChip;
-
-const styles = StyleSheet.create({
-  streakChip: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    backgroundColor: '#16a34a'
-  },
-  streakChipText: {
-    color: 'white',
-    fontWeight: '600'
-  }
-});

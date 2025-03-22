@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { DateTime } from 'luxon';
 import { db } from '../db/db.js';
 import {
@@ -54,12 +55,13 @@ export class ThingService extends BaseService {
     return db.transaction(async (tx) => {
       try {
         // Create thing
-        const [{ thingId }] = await this.repositories.thing.createSocial(
+        const [{ thingId, joinCode }] = await this.repositories.thing.createSocial(
           userId,
           data.name,
           data.description,
           data.location,
           data.image,
+          data.visibility,
           tx
         );
 
@@ -71,9 +73,55 @@ export class ThingService extends BaseService {
 
         // Add cover image
         await this.repositories.image.insert(userId, thingId, data.image, tx);
+
+        return { thingId, joinCode };
       } catch (error) {
         console.error('Error creating thing: %o', error);
         tx.rollback();
+        throw error;
+      }
+    });
+  }
+
+  public async getSocialThings(userId: string): Promise<SocialThingPreviewModel[]> {
+    const things = await this.repositories.thing.getSocialThingPreviews(userId);
+    const thingsWithNotified = [];
+
+    for (const thing of things) {
+      const role = await this.repositories.access.getThingAccess(userId, thing.id);
+      thingsWithNotified.push({ ...thing, notified: !!role, coverImage: ImageService.getImageUrl(thing.coverImage) });
+    }
+
+    return thingsWithNotified;
+  }
+
+  public async joinSocialThingByCode(userId: string, joinCode: string) {
+    return db.transaction(async (tx) => {
+      try {
+        const thing = await this.repositories.thing.getThingByJoinCode(joinCode, tx);
+
+        if (!thing) {
+          throw new ClientError('Invalid join code');
+        }
+
+        // Check if user already has access
+        const existingAccess = await this.repositories.access.getThingAccess(userId, thing.id, tx);
+
+        if (existingAccess) {
+          throw new ClientError(`You already have access to this thing`);
+        }
+
+        // Give viewer access
+        await this.repositories.access.giveThingAccess(thing.id, [userId], 'viewer', tx);
+
+        // Subscribe to notifications
+        await notificationService.subscribe(userId, thing.id);
+
+        return { thingId: thing.id, name: thing.name };
+      } catch (error) {
+        console.error('Error joining social thing: %o', error);
+        tx.rollback();
+        throw error;
       }
     });
   }
@@ -151,18 +199,6 @@ export class ThingService extends BaseService {
       image: ImageService.getImageUrl(filename),
       createdAt
     }));
-  }
-
-  public async getSocialThings(userId: string): Promise<SocialThingPreviewModel[]> {
-    const things = await this.repositories.thing.getSocialThingPreviews();
-    const thingsWithNotified = [];
-
-    for (const thing of things) {
-      const role = await this.repositories.access.getThingAccess(userId, thing.id);
-      thingsWithNotified.push({ ...thing, notified: !!role, coverImage: ImageService.getImageUrl(thing.coverImage) });
-    }
-
-    return thingsWithNotified;
   }
 
   public async toggleSocialThings(userId: string, thingId: string) {

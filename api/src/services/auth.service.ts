@@ -106,7 +106,7 @@ export class AuthService extends BaseService {
   /**
    * @throws {Error}
    */
-  private generateTokenPair(payload: AccessTokenPayload) {
+  public generateTokenPair(payload: AccessTokenPayload) {
     const accessToken = jwt.sign(payload, this.ACCESS_TOKEN_SECRET, {
       expiresIn: '1h'
     });
@@ -172,5 +172,25 @@ export class AuthService extends BaseService {
     }
 
     return true;
+  }
+
+  public async updateUsername(userId: string, username: string) {
+    const existingUser = await this.repositories.user.getByUsername(username);
+    if (existingUser) {
+      throw new ClientError('User already exists.');
+    }
+    return this.repositories.user.updateUsername(userId, username);
+  }
+
+  /**
+   * Get user by ID
+   * @throws {Error}
+   */
+  public async getUserById(userId: string) {
+    const user = await this.repositories.user.getById(userId);
+    if (!user) {
+      throw new ClientError('User not found');
+    }
+    return user;
   }
 }

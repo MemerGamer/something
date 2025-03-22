@@ -9,9 +9,11 @@ import H4 from '../../components/atoms/H4';
 import H3 from '../../components/atoms/H3';
 import Label from '../../components/atoms/Label';
 import H2 from '../../components/atoms/H2';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const Leaderboard = () => {
   const { leaderBoard, getData, visibility, toggleVisibility, refreshing } = useLeaderboardLogic();
+  const styles = useThemedStyles();
 
   useEffect(() => {
     getData();
@@ -58,6 +60,7 @@ const Leaderboard = () => {
           alignItems: 'center',
           width: '100%'
         }}
+        scrollEnabled={false}
         data={leaderBoard}
         renderItem={({ item, index }) => {
           return (
@@ -70,7 +73,8 @@ const Leaderboard = () => {
               <H2>{item.username}</H2>
               <Text
                 style={{
-                  fontSize: 20
+                  fontSize: 20,
+                  color: styles.text.color
                 }}
               >
                 {item.score} points

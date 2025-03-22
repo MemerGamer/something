@@ -134,3 +134,4 @@ dist
 .vscode
 .idea
 app/something-417b4-firebase-adminsdk-fbsvc-9b18808de3.json
+admin-panel/src/db/schema.ts

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { DimensionValue, Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Column from '../atoms/Column';
 import H2 from '../atoms/H2';
@@ -6,17 +6,24 @@ import H4 from '../atoms/H4';
 import ApiService from '../../services/ApiService';
 import Row from '../atoms/Row';
 import { DateTime } from 'luxon';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type ImageViewerProps = {
   uri: string;
   name?: string;
   username: string;
   createdAt: string;
+  simple?: boolean;
+  style?: {
+    width?: number | string;
+    height?: number | string;
+  };
 };
 
 const api = new ApiService();
 
-const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
+const ImageViewer = ({ uri, createdAt, name, username, simple = false, style }: ImageViewerProps) => {
+  const styles = useThemedStyles();
   const [image, setImage] = useState('');
   // console.log('createdAt', createdAt);
   // console.log(
@@ -49,11 +56,42 @@ const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
   if (!image) {
     return <></>;
   }
+
+  if (simple) {
+    return (
+      <View style={{ position: 'relative' }}>
+        <Image
+          source={{ uri: image }}
+          style={{
+            width: (style?.width as DimensionValue) ?? '100%',
+            height: (style?.height as DimensionValue) ?? 150,
+            resizeMode: 'contain',
+            backgroundColor: styles.image.backgroundColor,
+            borderRadius: 5
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            padding: 8,
+            borderRadius: 0
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 10 }}>{date}</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <Column
       styles={{
-        backgroundColor: '#f5f5f5',
-        borderColor: '#e0e0e0',
+        backgroundColor: styles.column.backgroundColor,
+        borderColor: styles.column.borderColor,
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 16,
@@ -66,7 +104,7 @@ const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
           width: '100%',
           height: 417,
           resizeMode: 'contain',
-          backgroundColor: '#a5d1b5',
+          backgroundColor: styles.image.backgroundColor,
           borderRadius: 5,
           marginBottom: 16
         }}
@@ -89,5 +127,3 @@ const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
 };
 
 export default ImageViewer;
-
-const styles = StyleSheet.create({});

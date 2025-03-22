@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService, { ApiError } from '../../services/ApiService';

@@ -1,26 +1,15 @@
 import { StyleSheet, Text, TextStyle, View } from 'react-native';
 import React from 'react';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type H1Props = {
   children: React.ReactNode;
-  customColor?: TextStyle['color'];
   accent?: boolean;
 };
 
-const H1 = ({ children, customColor, accent }: H1Props) => {
-  return <Text style={[styles.h1, { color: customColor }, accent && styles.accent]}>{children}</Text>;
+const H1 = ({ children, accent }: H1Props) => {
+  const styles = useThemedStyles();
+  return <Text style={[styles.H1, { color: styles.text.color }, accent && styles.headerAccent]}>{children}</Text>;
 };
 
 export default H1;
-
-const styles = StyleSheet.create({
-  h1: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#404040',
-    textAlign: 'center'
-  },
-  accent: {
-    color: '#16a34a'
-  }
-});

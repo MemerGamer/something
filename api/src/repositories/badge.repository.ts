@@ -1,7 +1,7 @@
 import { except } from 'drizzle-orm/pg-core';
 import { DrizzleDatabaseSession, DrizzleTransactionSession, db } from '../db/db.js';
 import { BadgeDefinitionTable, BadgeTable } from '../db/schema.js';
-import { InferInsertModel, and, desc, eq, lte } from 'drizzle-orm';
+import { InferInsertModel, and, eq, lte, sql } from 'drizzle-orm';
 
 export class BadgeRepository {
   /**
@@ -61,21 +61,89 @@ export class BadgeRepository {
   }
 
   public async getUserBadges(userId: string, limit: number | undefined = undefined) {
-    const query = db
+    // First, get all badge definitions
+    const allBadgeDefinitions = await db
       .select({
+        id: BadgeDefinitionTable.id,
         icon: BadgeDefinitionTable.icon,
         name: BadgeDefinitionTable.name,
-        description: BadgeDefinitionTable.description
+        description: BadgeDefinitionTable.description,
+        action: BadgeDefinitionTable.action,
+        actionCount: BadgeDefinitionTable.action_count
+      })
+      .from(BadgeDefinitionTable);
+
+    // Then, get the badges that the user has earned
+    const earnedBadges = await db
+      .select({
+        badgeDefinitionId: BadgeTable.badgeDefinitionId,
+        createdAt: BadgeTable.createdAt
       })
       .from(BadgeTable)
-      .innerJoin(BadgeDefinitionTable, eq(BadgeDefinitionTable.id, BadgeTable.badgeDefinitionId))
-      .where(eq(BadgeTable.userId, userId))
-      .orderBy(desc(BadgeTable.createdAt));
+      .where(eq(BadgeTable.userId, userId));
 
+    // Get the user's current action counts
+    const userActionCounts = await db
+      .select({
+        action: BadgeDefinitionTable.action,
+        actionCount: sql`count(${BadgeDefinitionTable.action})`.as('actionCount')
+      })
+      .from(BadgeDefinitionTable)
+      .leftJoin(BadgeTable, eq(BadgeTable.badgeDefinitionId, BadgeDefinitionTable.id))
+      .where(eq(BadgeTable.userId, userId))
+      .groupBy(BadgeDefinitionTable.action);
+
+    // Create a map of user's action counts for quick lookup
+    const userActionCountMap = new Map();
+    userActionCounts.forEach((actionCount) => {
+      userActionCountMap.set(actionCount.action, actionCount.actionCount);
+    });
+
+    // Create a map of earned badge definition IDs for quick lookup
+    // In case of duplicates, keep the most recent one
+    const earnedBadgeMap = new Map();
+    earnedBadges.forEach((badge) => {
+      const existing = earnedBadgeMap.get(badge.badgeDefinitionId);
+      if (!existing || new Date(badge.createdAt) > new Date(existing.earnedAt)) {
+        earnedBadgeMap.set(badge.badgeDefinitionId, {
+          earned: true,
+          earnedAt: badge.createdAt
+        });
+      }
+    });
+
+    // Combine the results - all badge definitions with earned status and progress
+    // Each badge definition will appear exactly once
+    let result = allBadgeDefinitions.map((badgeDef) => {
+      const earnedInfo = earnedBadgeMap.get(badgeDef.id) || { earned: false };
+      const userActionCount = userActionCountMap.get(badgeDef.action) || 0;
+      const progress = Math.min(userActionCount / badgeDef.actionCount, 1);
+      return {
+        ...badgeDef,
+        earned: earnedInfo.earned,
+        earnedAt: earnedInfo.earnedAt,
+        progress
+      };
+    });
+
+    // Sort by earnedAt (descending) for earned badges, then by progress (descending) for non-earned badges
+    result.sort((a, b) => {
+      if (a.earned && b.earned) {
+        return new Date(b.earnedAt).getTime() - new Date(a.earnedAt).getTime();
+      } else if (a.earned) {
+        return -1; // a is earned, b is not, so a comes first
+      } else if (b.earned) {
+        return 1; // b is earned, a is not, so b comes first
+      } else {
+        return b.progress - a.progress; // neither is earned, sort by progress descending
+      }
+    });
+
+    // Apply limit if specified
     if (limit) {
-      return query.limit(limit);
-    } else {
-      return query;
+      result = result.slice(0, limit);
     }
+
+    return result;
   }
 }

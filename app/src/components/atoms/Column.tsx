@@ -1,5 +1,6 @@
 import { View, Text, ViewStyle, StyleSheet, ScrollView, SafeAreaView, StatusBar, RefreshControl } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from '../../contexts/ThemeContext';
 
 type ColumProps = {
   children?: React.ReactNode;
@@ -10,6 +11,8 @@ type ColumProps = {
 };
 
 const Column = ({ children, styles, scrollable, refreshing, getData }: ColumProps) => {
+  const { theme, colors, setAppMode } = useContext(ThemeContext);
+
   if (scrollable) {
     return (
       // <SafeAreaView>
@@ -36,7 +39,6 @@ const ColumStyles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight
   },
   scrollView: {
-    backgroundColor: 'pink',
     marginHorizontal: 20
   }
 });

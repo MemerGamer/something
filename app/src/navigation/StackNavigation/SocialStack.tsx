@@ -4,14 +4,18 @@ import SocialThings from '../../Screens/SocialThings/SocialThings';
 import CreateSocialThingScreen from '../../Screens/CreateSocialThingScreen/CreateSocialThingScreen';
 import SetSocialTimeIntervals from '../../Screens/CreateSocialThingScreen/SetSocialTimeIntervals';
 import SocialThingDetailsScreen from '../../Screens/SocialThingDetailsScreen/SocialThingDetailsScreen';
+import { useTheme } from '../../hooks/hooks';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const HomeStack = createStackNavigator();
 
 export const SocialStackNavigation = () => {
+  const styles = useThemedStyles();
+
   return (
     <HomeStack.Navigator
       screenOptions={{
-        cardStyle: { backgroundColor: 'white' },
+        cardStyle: styles.container,
         headerShown: false
       }}
     >

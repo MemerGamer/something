@@ -11,7 +11,8 @@ import {
   date,
   index,
   primaryKey,
-  json
+  json,
+  varchar
 } from 'drizzle-orm/pg-core';
 
 const timechangeColumns = {
@@ -43,6 +44,18 @@ export const UserTable = pgTable(
   })
 );
 
+export const RequestTypeTable = pgTable('request_type', {
+  id: uuid('id').defaultRandom().notNull().primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => UserTable.id),
+  type: text('type', { enum: ['user', 'organization'] })
+    .notNull()
+    .default(check(`'user'`, `type IN ('user', 'organization')`)),
+  approved: boolean('approved').notNull().default(false),
+  ...timechangeColumns
+});
+
 export const SessionTable = pgTable(
   'session',
   {
@@ -72,7 +85,10 @@ export const ThingTable = pgTable(
       .default(check(`'personal'`, `type IN ('personal', 'social')`))
       .notNull(),
     location: text('location'),
+    // only used for social things
     coverFilename: text('cover_filename'),
+    visibility: text('visibility', { enum: ['public', 'private'] }),
+    join_code: varchar('join_code', { length: 10 }),
     ...timechangeColumns
   },
   (table) => ({

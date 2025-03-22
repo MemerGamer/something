@@ -1,14 +1,18 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../../Screens/LoginScreen/LoginScreen';
 import RegisterScreen from '../../Screens/RegisterScreen/RegisterScreen';
+import { useContext } from 'react';
+import { ThemeContext } from '../../contexts/ThemeContext';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const AuthStack = createStackNavigator();
 
 export const AuthStackNavigation = () => {
+  const styles = useThemedStyles();
   return (
     <AuthStack.Navigator
       screenOptions={{
-        cardStyle: { backgroundColor: 'white' },
+        cardStyle: styles.container,
         headerShown: false
       }}
     >

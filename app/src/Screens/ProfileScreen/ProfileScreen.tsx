@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Column from '../../components/atoms/Column';
 import H1 from '../../components/atoms/H1';
@@ -7,15 +7,25 @@ import H2 from '../../components/atoms/H2';
 import { useProfileScreenLogic } from './ProfileScreen.logic';
 import Label from '../../components/atoms/Label';
 import Spacer from '../../components/atoms/Spacer';
-import { FlatList } from 'react-native-gesture-handler';
-import * as Icons from 'react-native-feather';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import Icon from 'react-native-remix-icon';
 import H3 from '../../components/atoms/H3';
 import ThingCard from '../../components/molecules/ThingCard';
-import MyButton from '../../components/molecules/MyButton';
+import { Settings } from 'react-native-feather';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
+import ImageViewer from '../../components/molecules/ImageViewer';
+import { MasonryFlashList } from '@shopify/flash-list';
 
 type NonUndefined<T> = T extends undefined ? never : T;
+interface GalleryItem {
+  createdAt: string;
+  imageUrl: string;
+  thingId: string;
+  isSocial: boolean;
+}
 
 const ProfileScreen = ({ navigation }: any) => {
+  const styles = useThemedStyles();
   const logic = useProfileScreenLogic();
 
   const [opened, setOpened] = useState(true);
@@ -46,6 +56,47 @@ const ProfileScreen = ({ navigation }: any) => {
     );
   }
 
+  const renderButton = () => {
+    return (
+      <Column
+        styles={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 15,
+          backgroundColor: styles.accent.backgroundColor,
+          borderRadius: 15,
+          position: 'absolute',
+          right: 16,
+          top: 20
+        }}
+      >
+        <Settings
+          color={'white'}
+          onPress={() => {
+            navigation.push('Settings');
+          }}
+        />
+      </Column>
+    );
+  };
+
+  const handleImagePress = (item: { isSocial: boolean; thingId: any }) => {
+    const thing = logic.profile?.things.find((t) => t.id === item.thingId);
+    const streak = thing?.streak ?? 0; // Default to 0 if undefined
+
+    if (item.isSocial) {
+      navigation.navigate('SocialThingDetailsScreen', {
+        thingId: item.thingId,
+        userCount: streak // You might want to fetch this data
+      });
+    } else {
+      navigation.navigate('Details', {
+        thingId: item.thingId,
+        streakCount: streak // You might need to fetch this data
+      });
+    }
+  };
+
   return (
     <Column
       scrollable
@@ -61,9 +112,10 @@ const ProfileScreen = ({ navigation }: any) => {
       <H1>
         Profile <H1 accent>Things</H1>
       </H1>
+      {renderButton()}
       <Column
         styles={{
-          borderColor: '#f0f0f0',
+          borderColor: styles.column.borderColor,
           borderWidth: 1,
           borderRadius: 8,
           padding: 16,
@@ -72,7 +124,20 @@ const ProfileScreen = ({ navigation }: any) => {
         }}
       >
         <Row styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <H2>{logic.user?.username}</H2>
+          <H2>@{logic.user?.username}</H2>
+          <Text>{logic.profile?.level.currentScore} points</Text>
+          <View
+            style={{
+              right: 0,
+              gap: 10,
+              alignItems: 'center',
+              backgroundColor: styles.accent.backgroundColor,
+              padding: 3,
+              borderRadius: 10
+            }}
+          >
+            <Text style={{ color: styles.text.color }}>{logic.userType}</Text>
+          </View>
           <Text>{logic.profile?.level.currentScore} points</Text>
         </Row>
         <Spacer space={10} />
@@ -89,11 +154,11 @@ const ProfileScreen = ({ navigation }: any) => {
               gap: 5
             }}
           >
-            <Text>
+            <Text style={{ color: styles.text.color }}>
               {logic.profile?.level.currentLevel.name} ({logic.profile?.level.currentLevel.minThreshold})
             </Text>
           </Row>
-          <Text>
+          <Text style={{ color: styles.text.color }}>
             {logic.profile?.level.nextLevel.name} ({logic.profile?.level.nextLevel.minThreshold})
           </Text>
         </Row>
@@ -101,7 +166,7 @@ const ProfileScreen = ({ navigation }: any) => {
           styles={{
             width: '100%',
             height: 5,
-            backgroundColor: '#f0f0f0',
+            backgroundColor: styles.column.backgroundColor,
             borderRadius: 20,
             alignItems: 'flex-start',
             justifyContent: 'center'
@@ -111,7 +176,7 @@ const ProfileScreen = ({ navigation }: any) => {
             styles={{
               height: '100%',
               width: `${calculatePointPercentage(logic.profile)}%`,
-              backgroundColor: '#16a34a',
+              backgroundColor: styles.accent.backgroundColor,
               borderRadius: 20
             }}
           />
@@ -123,24 +188,51 @@ const ProfileScreen = ({ navigation }: any) => {
           data={logic.profile?.badges}
           horizontal
           contentContainerStyle={{ gap: 10, flexGrow: 1 }}
+          ListFooterComponent={
+            <TouchableOpacity onPress={() => navigation.navigate('BadgeScreen')}>
+              <Column
+                styles={{
+                  gap: 5,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: styles.column.backgroundColor,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: styles.accent.backgroundColor,
+                  borderWidth: 1,
+                  width: 75,
+                  height: 75
+                }}
+              >
+                <Text style={{ color: styles.accent.backgroundColor }}>See all badges</Text>
+              </Column>
+            </TouchableOpacity>
+          }
           renderItem={({ item }) => {
-            const icon = item.icon as keyof typeof Icons;
-            const Icon = Icons[icon];
             return (
               <Column
                 styles={{
                   gap: 5,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: styles.column.backgroundColor,
                   padding: 10,
                   borderRadius: 10,
-                  borderColor: '#f0f0f0',
-                  borderWidth: 1
+                  borderColor: item.earned ? styles.accent.backgroundColor : styles.column.borderColor,
+                  borderWidth: 1,
+                  width: 75,
+                  height: 75
                 }}
               >
-                {Icon ? <Icon color={'black'} /> : <Text>No icon for this badge: {item.icon}</Text>}
-                <Label text={item.name} />
+                {item.icon ? (
+                  // if item.earned is false make the icon gray
+                  <Icon name={item.icon as any} color={item.earned ? styles.accent.backgroundColor : 'gray'} />
+                ) : (
+                  <Text>No icon for this badge: {item.icon}</Text>
+                )}
+                {item.name.split(' ').map((word: string, index: number) => (
+                  <Label key={index} text={word} />
+                ))}
               </Column>
             );
           }}
@@ -153,7 +245,7 @@ const ProfileScreen = ({ navigation }: any) => {
       >
         <Column
           styles={{
-            borderColor: '#f0f0f0',
+            borderColor: styles.column.borderColor,
             borderWidth: 1,
             borderRadius: 8,
             paddingHorizontal: 16,
@@ -170,7 +262,7 @@ const ProfileScreen = ({ navigation }: any) => {
       </Pressable>
       <Column
         styles={{
-          borderColor: '#f0f0f0',
+          borderColor: styles.column.borderColor,
           borderWidth: 1,
           borderRadius: 8,
           paddingHorizontal: 16,
@@ -181,8 +273,10 @@ const ProfileScreen = ({ navigation }: any) => {
         }}
       >
         <H3 accent>My Things</H3>
+        {/* TODO:Fix two children with same key problem which occurs, because things are shared */}
         <FlatList
           scrollEnabled={false}
+          keyExtractor={(item) => item.id.toString()}
           data={opened ? logic.profile?.things : logic.profile?.things.slice(0, 3)}
           style={{ marginTop: 16 }}
           contentContainerStyle={{ gap: 5 }}
@@ -200,14 +294,49 @@ const ProfileScreen = ({ navigation }: any) => {
       </Column>
       <Column
         styles={{
-          marginTop: 100
+          borderColor: styles.column.borderColor,
+          borderWidth: 1,
+          borderRadius: 8,
+          paddingHorizontal: 16,
+          paddingTop: 16,
+          paddingBottom: opened ? 16 : 5,
+          marginTop: 16,
+          marginBottom: 20,
+          width: '100%'
         }}
       >
-        <MyButton accent smalltext text="Log out" onPress={logic.handleLogout} />
+        <H3 accent>My Memories</H3>
+        {logic.galleryImages && logic.galleryImages.length > 0 ? (
+          <MasonryFlashList
+            key={logic.galleryImages.length}
+            data={logic.galleryImages}
+            extraData={logic.galleryImages}
+            numColumns={3}
+            estimatedItemSize={20} // Improves performance
+            keyExtractor={(item, index) => `${item.thingId}-${index}`}
+            // space between items
+            renderItem={({ item, index }) => (
+              <View style={[{ padding: 3, flex: 1 }]}>
+                <TouchableOpacity onPress={() => handleImagePress(item)}>
+                  <ImageViewer
+                    uri={item.imageUrl}
+                    username={logic.user?.username as string}
+                    createdAt={item.createdAt}
+                    simple={true}
+                    style={{ height: 150, width: '100%' }}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        ) : (
+          <Text style={{ marginTop: 16, color: styles.text.color, textAlign: 'center', padding: 20 }}>
+            No memories captured yet
+          </Text>
+        )}
       </Column>
     </Column>
   );
 };
 
-const styles = StyleSheet.create({});
 export default ProfileScreen;

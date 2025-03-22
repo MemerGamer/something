@@ -40,5 +40,3 @@ const ActionRow = ({ label, action }: ActionRowProps) => {
 };
 
 export default ActionRow;
-
-const styles = StyleSheet.create({});

@@ -37,6 +37,24 @@ export const userProfile = createRoute({
   }
 });
 
+export const userType = createRoute({
+  method: 'get',
+  path: '/me/type',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: 'Retrieve user type.',
+  tags: ['User'],
+  responses: {
+    [StatusCodes.OK]: {
+      ...textc(z.string()),
+      description: `User's type.`
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occured.'
+    }
+  }
+});
+
 export const userBadges = createRoute({
   method: 'get',
   path: '/me/badges',
@@ -51,6 +69,33 @@ export const userBadges = createRoute({
     },
     [StatusCodes.INTERNAL_SERVER_ERROR]: {
       description: 'Unexpected error occured.'
+    }
+  }
+});
+
+export const userGallery = createRoute({
+  method: 'get',
+  path: '/me/gallery',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: 'Retrieve all images that the user has uploaded with associated thing details',
+  tags: ['User'],
+  responses: {
+    [StatusCodes.OK]: {
+      ...jsonc(
+        z.array(
+          z.object({
+            imageUrl: z.string(),
+            thingId: z.string(),
+            createdAt: z.string().datetime(),
+            isSocial: z.boolean()
+          })
+        )
+      ),
+      description: `User's gallery images with associated thing details.`
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occurred.'
     }
   }
 });
@@ -112,6 +157,84 @@ export const usernameExists = createRoute({
     },
     [StatusCodes.INTERNAL_SERVER_ERROR]: {
       description: 'Unexpected error occured.'
+    }
+  }
+});
+
+export const userTypeRequest = createRoute({
+  method: 'post',
+  path: '/me/type-request',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: 'Request user type change to organization',
+  tags: ['User'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              type: z.enum(['user', 'organization']).default('organization')
+            })
+            .optional()
+        }
+      }
+    }
+  },
+  responses: {
+    [StatusCodes.OK]: {
+      ...jsonc(
+        z.object({
+          message: z.string(),
+          requestId: z.string()
+        })
+      ),
+      description: `User type change request created successfully.`
+    },
+    [StatusCodes.BAD_REQUEST]: {
+      description: 'User already has pending request or invalid request.'
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occurred.'
+    }
+  }
+});
+
+export const updateUsername = createRoute({
+  method: 'patch',
+  path: '/me/username',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: "Update the current user's username",
+  tags: ['User'],
+  request: {
+    body: jsonc(
+      z.object({
+        username: z.string().min(3).max(20)
+      })
+    )
+  },
+  responses: {
+    [StatusCodes.OK]: {
+      ...jsonc(
+        z.object({
+          message: z.string(),
+          newUsername: z.string(),
+          accessToken: z.string()
+        })
+      ),
+      description: 'Username updated successfully'
+    },
+    [StatusCodes.BAD_REQUEST]: {
+      ...jsonc(
+        z.object({
+          error: z.string()
+        })
+      ),
+      description: 'Invalid request or username already exists'
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occurred.'
     }
   }
 });

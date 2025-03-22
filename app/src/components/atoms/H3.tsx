@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 type H3Props = {
   children?: React.ReactNode;
@@ -8,21 +9,8 @@ type H3Props = {
 };
 
 const H3 = ({ children, accent, white }: H3Props) => {
-  return <Text style={[styles.H3, accent && styles.accent, white && styles.white]}>{children}</Text>;
+  const styles = useThemedStyles();
+  return <Text style={[styles.H3, accent && styles.headerAccent, white && styles.alwaysWhiteText]}>{children}</Text>;
 };
 
 export default H3;
-
-const styles = StyleSheet.create({
-  H3: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#404040'
-  },
-  accent: {
-    color: '#16a34a'
-  },
-  white: {
-    color: 'white'
-  }
-});
