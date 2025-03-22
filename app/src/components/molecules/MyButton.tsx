@@ -16,6 +16,7 @@ type MyButtonProps = {
   icon?: boolean;
   backgroundColor?: string;
   borderColor?: string;
+  disabled?: boolean;
 };
 
 const MyButton = ({
@@ -27,7 +28,8 @@ const MyButton = ({
   smalltext,
   icon,
   backgroundColor,
-  borderColor
+  borderColor,
+  disabled
 }: MyButtonProps) => {
   const styles = useThemedStyles();
   if (small) {
@@ -41,13 +43,14 @@ const MyButton = ({
   }
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={onPress} disabled={disabled}>
       <Column
         styles={[
           styles.myButton,
           accent ? styles.myButtonAccent : styles.myButton,
           backgroundColor ? { backgroundColor } : styles.myButton,
-          borderColor ? { borderColor } : styles.myButton
+          borderColor ? { borderColor } : styles.myButton,
+          disabled ? styles.disabledButton : styles.myButton
         ]}
       >
         {icon && <Camera color={styles.accent.color} style={{ marginRight: 10 }} />}

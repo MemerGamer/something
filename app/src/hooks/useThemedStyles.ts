@@ -219,6 +219,12 @@ export const useThemedStyles = () => {
       color: '#fff',
       fontSize: 24,
       fontWeight: '400'
+    },
+    disabledButton: {
+      borderWidth: 2,
+      borderColor: colors.disabledBorder,
+      backgroundColor: colors.disabledBackground,
+      color: colors.disabledText
     }
   });
 };

@@ -31,7 +31,7 @@ const SettingsScreen = ({ navigation }: any) => {
   return (
     <Column
       scrollable
-      /*getData={logic.getData}*/ styles={{
+      styles={{
         flex: 1,
         paddingTop: 30,
         paddingVertical: 20,
@@ -41,7 +41,13 @@ const SettingsScreen = ({ navigation }: any) => {
     >
       <H1>SetThings</H1>
       <MyButton accent smalltext text="Change Username" onPress={logic.handleChangeUsername} />
-      <MyButton accent smalltext text="Request Organization Role" onPress={logic.handleRequestOrganizationRole} />
+      <MyButton
+        accent
+        smalltext
+        text={logic.requestSent ? 'Organization Request Sent' : 'Request Organization Role'}
+        onPress={logic.handleRequestOrganizationRole}
+        disabled={logic.requestSent}
+      />
       <Row styles={{ justifyContent: 'space-between', alignItems: 'center', gap: 5 }}>
         <MyButton accent smalltext text="Light" onPress={logic.handleToggleTheme} />
         <MyButton accent smalltext text="Dark" onPress={logic.handleToggleTheme} />

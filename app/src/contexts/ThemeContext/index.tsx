@@ -11,7 +11,10 @@ const lightColors = {
   imageBackground: '#a5d1b5',
   smallNBigText: '#404040',
   error: '#d60202',
-  alwaysWhite: '#ffffff'
+  alwaysWhite: '#ffffff',
+  disabledBorder: '#999999',
+  disabledBackground: '#cccccc',
+  disabledText: '$666666'
 };
 
 const darkColors = {
@@ -24,7 +27,10 @@ const darkColors = {
   imageBackground: '#5a7062',
   smallNBigText: '#bababa',
   error: '#d60202',
-  alwaysWhite: '#ffffff'
+  alwaysWhite: '#ffffff',
+  disabledBorder: '#999999',
+  disabledBackground: '#cccccc',
+  disabledText: '$666666'
 };
 
 interface ThemeContextType {
