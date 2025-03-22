@@ -48,4 +48,23 @@ export class ImageService extends BaseService {
   static getImageUrl(filename: string) {
     return `${process.env.API_HOST}/images/${filename}`;
   }
+
+  // Add this to your ImageService class
+  public async getUserGallery(userId: string) {
+    // Get all images associated with the user's things
+    const galleryItems = await this.repositories.image.getUserGalleryItems(userId);
+
+    // Transform the results to include imageUrl
+    const transformedItems = galleryItems.map((item) => ({
+      ...item,
+      imageUrl: ImageService.getImageUrl(item.filename),
+      isSocial: item.thingType === 'social'
+    }));
+
+    // Remove item filename and thingType from the response
+    return transformedItems.map((item) => {
+      const { filename: _filename, thingType: _thingType, ...rest } = item;
+      return rest;
+    });
+  }
 }

@@ -72,4 +72,18 @@ export class ImageRepository {
 
     return thingId ? thingId : null;
   }
+
+  public async getUserGalleryItems(userId: string, tx: DrizzleDatabaseSession | DrizzleTransactionSession = db) {
+    return tx
+      .select({
+        thingId: ImageTable.thingId,
+        filename: ImageTable.filename,
+        createdAt: ImageTable.createdAt,
+        thingType: ThingTable.type
+      })
+      .from(ImageTable)
+      .innerJoin(ThingTable, eq(ImageTable.thingId, ThingTable.id))
+      .where(eq(ImageTable.userId, userId))
+      .orderBy(desc(ImageTable.createdAt));
+  }
 }

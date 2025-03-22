@@ -73,6 +73,33 @@ export const userBadges = createRoute({
   }
 });
 
+export const userGallery = createRoute({
+  method: 'get',
+  path: '/me/gallery',
+  middleware: useAccessToken(),
+  security: bearerAuth,
+  description: 'Retrieve all images that the user has uploaded with associated thing details',
+  tags: ['User'],
+  responses: {
+    [StatusCodes.OK]: {
+      ...jsonc(
+        z.array(
+          z.object({
+            imageUrl: z.string(),
+            thingId: z.string(),
+            createdAt: z.string().datetime(),
+            isSocial: z.boolean()
+          })
+        )
+      ),
+      description: `User's gallery images with associated thing details.`
+    },
+    [StatusCodes.INTERNAL_SERVER_ERROR]: {
+      description: 'Unexpected error occurred.'
+    }
+  }
+});
+
 export const leaderboard = createRoute({
   method: 'get',
   path: '/leaderboard/all',
