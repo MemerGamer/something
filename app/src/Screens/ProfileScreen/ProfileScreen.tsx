@@ -116,11 +116,11 @@ const ProfileScreen = ({ navigation }: any) => {
               gap: 5
             }}
           >
-            <Text>
+            <Text style={{ color: styles.text.color }}>
               {logic.profile?.level.currentLevel.name} ({logic.profile?.level.currentLevel.minThreshold})
             </Text>
           </Row>
-          <Text>
+          <Text style={{ color: styles.text.color }}>
             {logic.profile?.level.nextLevel.name} ({logic.profile?.level.nextLevel.minThreshold})
           </Text>
         </Row>
