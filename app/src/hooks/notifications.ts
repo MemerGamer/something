@@ -22,7 +22,12 @@ import {
 } from 'expo-notifications';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
-import { navigate } from '../navigation/RootNavigation';
+
+const navigate = (name: string, params?: Record<string, any>) => {
+  import('../navigation/RootNavigation').then((module) => {
+    module.navigate(name, params);
+  });
+};
 
 export async function getExpoPushToken() {
   let token;
