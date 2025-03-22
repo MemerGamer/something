@@ -17,6 +17,7 @@ type MyButtonProps = {
   backgroundColor?: string;
   borderColor?: string;
   disabled?: boolean;
+  errorText?: string;
 };
 
 const MyButton = ({
@@ -29,7 +30,8 @@ const MyButton = ({
   icon,
   backgroundColor,
   borderColor,
-  disabled
+  disabled,
+  errorText
 }: MyButtonProps) => {
   const styles = useThemedStyles();
   if (small) {
@@ -56,6 +58,7 @@ const MyButton = ({
         {icon && <Camera color={styles.accent.color} style={{ marginRight: 10 }} />}
         {!smalltext ? <H4 accent={accent}>{text}</H4> : <H3 accent={accent}>{text}</H3>}
       </Column>
+      <Text style={{ color: styles.error.color }}>{errorText}</Text>
     </Pressable>
   );
 };

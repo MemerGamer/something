@@ -190,7 +190,8 @@ export const useThemedStyles = () => {
       paddingHorizontal: 12
     },
     error: {
-      borderColor: colors.error
+      borderColor: colors.error,
+      color: colors.error
     },
     homeContainer: {
       flex: 1,

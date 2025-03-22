@@ -2,14 +2,23 @@ import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import { useAppSelector, useAppDispatch } from '../../hooks/hooks';
 import { authSelector, logout } from '../../redux/auth/AuthSlice';
-import { getUserType, postTypeRequest, settingsSelector } from '../../redux/settings/SettingsStack';
+import {
+  getUserType,
+  postTypeRequest,
+  postUsernameChangeRequest,
+  settingsSelector
+} from '../../redux/settings/SettingsStack';
 import { RootState } from '../../redux/store';
 
 export const useSettingsScreenLogic = () => {
   const [requestSent, setRequestSent] = useState(false);
   const { useDeviceTheme, toggleTheme } = useContext(ThemeContext);
   const dispatch = useAppDispatch();
-  const { userType, loading, error } = useAppSelector((state: RootState) => state.settingsReducer);
+  const { userType, loading, error, username } = useAppSelector((state: RootState) => state.settingsReducer);
+  const [newUsername, setNewUsername] = useState(username);
+  const [inputError, setInputError] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const { user } = useAppSelector(authSelector);
 
   useEffect(() => {
     dispatch(getUserType());
@@ -36,7 +45,16 @@ export const useSettingsScreenLogic = () => {
     }
   };
 
-  const handleChangeUsername = () => {};
+  const handleChangeUsername = async () => {
+    if (newUsername.trim().length < 5) {
+      setInputError('Username must be at least 5 characters long');
+      return;
+    }
+
+    setRefreshing(true);
+    await dispatch(postUsernameChangeRequest(newUsername));
+    setRefreshing(false);
+  };
 
   //   return { loading, error, user, settings };
   return {
@@ -47,6 +65,10 @@ export const useSettingsScreenLogic = () => {
     requestSent,
     userType,
     loading,
-    error
+    error,
+    username,
+    newUsername,
+    setNewUsername,
+    refreshing
   };
 };
