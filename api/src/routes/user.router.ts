@@ -9,7 +9,8 @@ import {
   usernameExists,
   userTypeRequest,
   updateUsername,
-  userType
+  userType,
+  userGallery
 } from './user.definition.js';
 import { ClientError, zodErrorHandler } from '../utils/errors.js';
 import { ThingService } from '../services/thing.service.js';
@@ -17,12 +18,14 @@ import { RewardService } from '../services/reward.service.js';
 import { LeaderboardService } from '../services/leaderboard.service.js';
 import { AuthService } from '../services/auth.service.js';
 import { RequestTypeService } from '../services/request-type.service.js';
+import { ImageService } from '../services/image.service.js';
 
 const thingService = new ThingService();
 const rewardService = new RewardService();
 const leaderboardService = new LeaderboardService();
 const authservice = new AuthService();
 const requestTypeService = new RequestTypeService();
+const imageService = new ImageService();
 
 export const userRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(userProfile, async (c) => {
@@ -138,4 +141,10 @@ export const userRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
       }
       throw error;
     }
+  })
+  .openapi(userGallery, async (c) => {
+    const userId = c.get('jwtPayload').id;
+
+    const galleryItems = await imageService.getUserGallery(userId);
+    return c.json(galleryItems, StatusCodes.OK);
   });

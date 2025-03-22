@@ -13,11 +13,12 @@ type ImageViewerProps = {
   name?: string;
   username: string;
   createdAt: string;
+  simple?: boolean;
 };
 
 const api = new ApiService();
 
-const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
+const ImageViewer = ({ uri, createdAt, name, username, simple = false }: ImageViewerProps) => {
   const styles = useThemedStyles();
   const [image, setImage] = useState('');
   // console.log('createdAt', createdAt);
@@ -51,6 +52,37 @@ const ImageViewer = ({ uri, createdAt, name, username }: ImageViewerProps) => {
   if (!image) {
     return <></>;
   }
+
+  if (simple) {
+    return (
+      <View style={{ position: 'relative' }}>
+        <Image
+          source={{ uri: image }}
+          style={{
+            width: '100%',
+            height: 150,
+            resizeMode: 'contain',
+            backgroundColor: styles.image.backgroundColor,
+            borderRadius: 5
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            padding: 8,
+            borderRadius: 0
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 10 }}>{date}</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <Column
       styles={{
