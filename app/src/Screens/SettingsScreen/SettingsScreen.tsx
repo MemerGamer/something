@@ -8,23 +8,25 @@ import Row from '../../components/atoms/Row';
 import MyButton from '../../components/molecules/MyButton';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
 import LabeledInput from '../../components/organisms/TextInputWithLabel';
+import { useProfileScreenLogic } from '../ProfileScreen/ProfileScreen.logic';
 
 const SettingsScreen = ({ navigation }: any) => {
   const styles = useThemedStyles();
-  const logic = useSettingsScreenLogic();
+  const settingsLogic = useSettingsScreenLogic();
+  const profileLogic = useProfileScreenLogic();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
 
   const handleStartEditing = () => {
-    setIsEditingUsername(true); // Show the input when button is pressed
-    logic.setNewUsername(logic.newUsername);
+    setIsEditingUsername(true);
+    profileLogic.setNewUsername(profileLogic.newUsername);
   };
 
   const handleCancelEditing = () => {
-    setIsEditingUsername(false); // Hide the input if user cancels
-    logic.setNewUsername(logic.username);
+    setIsEditingUsername(false);
+    profileLogic.setNewUsername(profileLogic.username || profileLogic.user?.username || '');
   };
 
-  if (logic.loading) {
+  if (profileLogic.loading) {
     return (
       <Column
         styles={{
@@ -41,7 +43,7 @@ const SettingsScreen = ({ navigation }: any) => {
   return (
     <Column
       scrollable
-      refreshing={logic.refreshing}
+      refreshing={profileLogic.refreshing}
       styles={{
         flex: 1,
         paddingTop: 30,
@@ -60,8 +62,8 @@ const SettingsScreen = ({ navigation }: any) => {
           <LabeledInput
             label="Username"
             placeholder="Enter new Username"
-            value={logic.newUsername}
-            onChangeText={logic.setNewUsername}
+            value={profileLogic.newUsername}
+            onChangeText={profileLogic.setNewUsername}
           />
           <Row styles={{ justifyContent: 'space-between' }}>
             <MyButton accent smalltext text="Cancel" onPress={handleCancelEditing} />
@@ -69,32 +71,32 @@ const SettingsScreen = ({ navigation }: any) => {
               accent
               smalltext
               text="Save"
-              onPress={logic.handleChangeUsername}
-              disabled={logic.newUsername.trim().length < 5}
+              onPress={profileLogic.handleChangeUsername}
+              disabled={profileLogic.newUsername.trim().length < 5}
             />
           </Row>
         </Column>
       )}
-      {logic.userType === 'user' && (
+      {profileLogic.userType === 'user' && (
         <MyButton
           accent
           smalltext
-          text={logic.requestSent ? 'Organization Request Sent' : 'Request Organization Role'}
-          onPress={logic.handleRequestOrganizationRole}
-          disabled={logic.requestSent}
+          text={profileLogic.requestSent ? 'Organization Request Sent' : 'Request Organization Role'}
+          onPress={profileLogic.handleRequestOrganizationRole}
+          disabled={profileLogic.requestSent}
         />
       )}
       <Row styles={{ justifyContent: 'space-between', alignItems: 'center', gap: 5 }}>
-        <MyButton accent smalltext text="Light" onPress={logic.handleToggleTheme} />
-        <MyButton accent smalltext text="Dark" onPress={logic.handleToggleTheme} />
-        <MyButton accent smalltext text="System" onPress={logic.handleToggleTheme} />
+        <MyButton accent smalltext text="Light" onPress={settingsLogic.handleToggleTheme} />
+        <MyButton accent smalltext text="Dark" onPress={settingsLogic.handleToggleTheme} />
+        <MyButton accent smalltext text="System" onPress={settingsLogic.handleToggleTheme} />
       </Row>
       <Column
         styles={{
           bottom: 0
         }}
       >
-        <MyButton accent smalltext text="Log out" onPress={logic.handleLogout} />
+        <MyButton accent smalltext text="Log out" onPress={settingsLogic.handleLogout} />
       </Column>
     </Column>
   );

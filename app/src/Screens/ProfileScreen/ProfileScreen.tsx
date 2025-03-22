@@ -123,6 +123,19 @@ const ProfileScreen = ({ navigation }: any) => {
         <Row styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <H2>@{logic.user?.username}</H2>
           <Text>{logic.profile?.level.currentScore} points</Text>
+          <View
+            style={{
+              right: 0,
+              gap: 10,
+              alignItems: 'center',
+              backgroundColor: styles.accent.backgroundColor,
+              padding: 3,
+              borderRadius: 10
+            }}
+          >
+            <Text style={{ color: styles.text.color }}>{logic.userType}</Text>
+          </View>
+          <Text>{logic.profile?.level.currentScore} points</Text>
         </Row>
         <Spacer space={10} />
         <Row
