@@ -6,6 +6,7 @@ import SetSocialTimeIntervals from '../../Screens/CreateSocialThingScreen/SetSoc
 import SocialThingDetailsScreen from '../../Screens/SocialThingDetailsScreen/SocialThingDetailsScreen';
 import { useTheme } from '../../hooks/hooks';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import JoinSocialThingScreen from '../../Screens/JoinSocialThingScreen/JoinSocialThingScreen';
 
 const HomeStack = createStackNavigator();
 
@@ -20,7 +21,7 @@ export const SocialStackNavigation = () => {
       }}
     >
       <HomeStack.Screen name="SocialThings" component={SocialThings} />
-      <HomeStack.Screen name="CreateSocialThing" component={CreateSocialThingScreen} />
+      <HomeStack.Screen name="JoinSocialThing" component={JoinSocialThingScreen} />
       <HomeStack.Screen name="SetSocialTime" component={SetSocialTimeIntervals} />
       <HomeStack.Screen name="Camera" component={CameraScreen} />
       <HomeStack.Screen name="SocialDetails" component={SocialThingDetailsScreen} />

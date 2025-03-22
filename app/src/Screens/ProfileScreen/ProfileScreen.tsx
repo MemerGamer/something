@@ -15,6 +15,7 @@ import { Settings } from 'react-native-feather';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import { MasonryFlashList } from '@shopify/flash-list';
+import OrganizationThingCard from '../../components/molecules/OrganizationThingCard';
 
 type NonUndefined<T> = T extends undefined ? never : T;
 interface GalleryItem {
@@ -125,65 +126,24 @@ const ProfileScreen = ({ navigation }: any) => {
       >
         <Row styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <H2>@{logic.user?.username}</H2>
-          <Text>{logic.profile?.level.currentScore} points</Text>
-          <View
-            style={{
-              right: 0,
-              gap: 10,
-              alignItems: 'center',
-              backgroundColor: styles.accent.backgroundColor,
-              padding: 3,
-              borderRadius: 10
-            }}
-          >
-            <Text style={{ color: styles.text.color }}>{logic.userType}</Text>
-          </View>
-          <Text>{logic.profile?.level.currentScore} points</Text>
+          {logic.userType === 'user' ? (
+            <Text style={{ color: styles.accent.color }}>{logic.profile?.level.currentScore} points</Text>
+          ) : (
+            <View
+              style={{
+                right: 0,
+                gap: 10,
+                alignItems: 'center',
+                backgroundColor: styles.accent.backgroundColor,
+                padding: 3,
+                borderRadius: 10
+              }}
+            >
+              {/* <Text style={{ color: styles.text.color }}>{logic.userType}</Text> */}
+              <Icon name="verified-badge-line" color={styles.alwaysWhiteText.color} />
+            </View>
+          )}
         </Row>
-        <Spacer space={10} />
-        <Row
-          styles={{
-            alignItems: 'center',
-            gap: 5,
-            justifyContent: 'space-between'
-          }}
-        >
-          <Row
-            styles={{
-              alignItems: 'center',
-              gap: 5
-            }}
-          >
-            <Text style={{ color: styles.text.color }}>
-              {logic.profile?.level.currentLevel.name} ({logic.profile?.level.currentLevel.minThreshold})
-            </Text>
-          </Row>
-          <Text style={{ color: styles.text.color }}>
-            {logic.profile?.level.nextLevel.name} ({logic.profile?.level.nextLevel.minThreshold})
-          </Text>
-        </Row>
-        <Column
-          styles={{
-            width: '100%',
-            height: 5,
-            backgroundColor: styles.column.backgroundColor,
-            borderRadius: 20,
-            alignItems: 'flex-start',
-            justifyContent: 'center'
-          }}
-        >
-          <Column
-            styles={{
-              height: '100%',
-              width: `${calculatePointPercentage(logic.profile)}%`,
-              backgroundColor: styles.accent.backgroundColor,
-              borderRadius: 20
-            }}
-          />
-        </Column>
-        <Spacer space={15} />
-        {/* <Text>Badges</Text> */}
-        {/* <Spacer space={10} /> */}
         <FlatList
           data={logic.profile?.badges}
           horizontal

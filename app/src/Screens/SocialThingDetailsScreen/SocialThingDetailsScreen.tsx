@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Column from '../../components/atoms/Column';
-import { useThingDetailsScreenLogic } from './SocialThingDetailsScreen.logic';
+import { useSocialThingDetailsScreenLogic } from './SocialThingDetailsScreen.logic';
 import Row from '../../components/atoms/Row';
 import H1 from '../../components/atoms/H1';
 import StreakChip from '../../components/atoms/StreakChip';
@@ -16,12 +16,17 @@ import { DateTime } from 'luxon';
 
 const SocialThingDetailsScreen = ({ route, navigation }: any) => {
   const styles = useThemedStyles();
-  const { getDetails, thing, refreshing } = useThingDetailsScreenLogic();
-  const { thingId, userCount } = route.params;
+  const { getDetails, thing, refreshing } = useSocialThingDetailsScreenLogic();
+  const [userCount, setUserCount] = useState(0);
+  const { thingId } = route.params;
 
   useEffect(() => {
     getDetails(thingId);
   }, [thingId]);
+
+  useEffect(() => {
+    setUserCount(thing?.sharedWith.length ?? 0);
+  }, [thing]);
 
   if (!thing) {
     return (
@@ -87,6 +92,18 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
       >
         <H1>{thing.name}</H1>
       </Row>
+      <Column>
+        <Row styles={{ gap: 5 }}>
+          <H4>Visibility:</H4>
+          <H4 accent>{thing.visibility?.charAt(0).toUpperCase().concat(thing.visibility.slice(1))}</H4>
+        </Row>
+        {thing.visibility === 'private' && (
+          <Row styles={{ gap: 5 }}>
+            <H4>Join Code:</H4>
+            <H4 accent>{thing.joinCode}</H4>
+          </Row>
+        )}
+      </Column>
       <Column>
         <H4>Schedule</H4>
         <Text style={{ marginTop: 10, color: styles.text.color }}>{scheduleText()}</Text>

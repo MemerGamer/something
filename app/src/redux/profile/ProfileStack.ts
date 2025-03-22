@@ -67,7 +67,6 @@ export const getUserType = createAsyncThunk('profile/getUserType', async (_, { r
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Parsed response: ', data);
       return data;
     }
 

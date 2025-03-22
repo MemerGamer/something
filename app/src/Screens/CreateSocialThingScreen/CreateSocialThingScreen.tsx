@@ -13,6 +13,7 @@ import LoadingOverlay from '../../components/organisms/LoadingOverlay';
 import { LinearGradient } from 'expo-linear-gradient';
 import ErrorText from '../../components/atoms/ErrorText';
 import { extractError } from '../../services/ApiService';
+import DropDown from '../../components/atoms/DropDown';
 
 const CreateSocialThingScreen = ({ navigation }: any) => {
   const {
@@ -28,7 +29,9 @@ const CreateSocialThingScreen = ({ navigation }: any) => {
     thingLocation,
     setThingLocation,
     setUri,
-    uri
+    uri,
+    setVisibility,
+    visibility
   } = useCreateThingScreenLogic(navigation);
 
   const pickImage = async () => {
@@ -127,6 +130,14 @@ const CreateSocialThingScreen = ({ navigation }: any) => {
             onChangeText={setThingLocation}
             error={error}
             path={['Location']}
+          />
+          <DropDown
+            data={[
+              { label: 'Private', value: 'private' },
+              { label: 'Public', value: 'public' }
+            ]}
+            selectedValue={visibility}
+            setSelectedValue={setVisibility}
           />
 
           {/* Cover image */}

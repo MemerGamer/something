@@ -8,6 +8,7 @@ import BadgeScreen from '../../Screens/BadgeScreen/BadgeScreen';
 import { useContext } from 'react';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import SocialThingDetailsScreen from '../../Screens/SocialThingDetailsScreen/SocialThingDetailsScreen';
 
 const ProfileStack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export const ProfileStackNavigation = () => {
       <ProfileStack.Screen name="Details" component={ThingDetailsScreen} />
       <ProfileStack.Screen name="BadgeScreen" component={BadgeStackNavigation} />
       <ProfileStack.Screen name="Settings" component={SettingsScreen} />
+      <ProfileStack.Screen name="SocialDetails" component={SocialThingDetailsScreen} />
     </ProfileStack.Navigator>
   );
 };

@@ -25,12 +25,14 @@ type User = {
 
 interface AuthState {
   user: User | null;
+  userType: string;
   loading: boolean;
   error: ApiError | undefined;
 }
 
 const initialState: AuthState = {
   user: null,
+  userType: '',
   loading: true,
   error: undefined
 };
@@ -110,6 +112,27 @@ export const register = createAsyncThunk(
   }
 );
 
+export const getUserType = createAsyncThunk('auth/getUserType', async (_, { rejectWithValue }) => {
+  try {
+    console.info('Making API request...');
+    const response = await api.call(api.client.user.me.type.$get, {});
+
+    console.info('API response: ', response);
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Parsed response: ', data);
+      return data;
+    }
+
+    console.error('API response not ok:', response.status, response.statusText);
+    return rejectWithValue('API error');
+  } catch (error) {
+    console.log(error);
+    return rejectWithValue(error);
+  }
+});
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -167,6 +190,19 @@ export const authSlice = createSlice({
     builder.addCase(logout.pending, (state) => {
       state.loading = false;
       state.user = null;
+    });
+
+    // getUserType
+    builder.addCase(getUserType.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getUserType.fulfilled, (state, action) => {
+      state.userType = (action.payload as { type: string }).type;
+      state.loading = false;
+    });
+    builder.addCase(getUserType.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as any;
     });
   }
 });

@@ -11,6 +11,7 @@ interface ThingState {
   newSocialThing: {
     location: string;
     uri: string;
+    visibility: string;
   };
   userThings: {
     home: ApiResponse<typeof api.client.things.mine.today.$get, 200>;
@@ -33,7 +34,8 @@ const initialState: ThingState = {
   },
   newSocialThing: {
     location: '',
-    uri: ''
+    uri: '',
+    visibility: ''
   },
   userThings: {
     home: [],
@@ -124,6 +126,7 @@ export const createSocialThing = createAsyncThunk(
     body.append('name', thing.name);
     body.append('description', thing.description);
     body.append('location', extradata.location);
+    body.append('visibility', extradata.visibility);
     body.append('schedule', JSON.stringify(thing.schedule));
     // @ts-ignore
     body.append('image', {
@@ -175,6 +178,9 @@ const thingSlice = createSlice({
     },
     setUriForNewPersonalThing: (state, action: PayloadAction<string>) => {
       state.newSocialThing.uri = action.payload;
+    },
+    setVisbilityForNewThing: (state, action: PayloadAction<string>) => {
+      state.newSocialThing.visibility = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -274,5 +280,6 @@ export const {
   setDescriptionForNewPersonalThing,
   setSharedUserNamesForNewPersonalThing,
   setLocationForNewPersonalThing,
-  setUriForNewPersonalThing
+  setUriForNewPersonalThing,
+  setVisbilityForNewThing
 } = thingSlice.actions;
