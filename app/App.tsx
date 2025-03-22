@@ -26,6 +26,7 @@ function AppContent() {
       <StatusBar
         translucent={false}
         backgroundColor={styles.container.backgroundColor}
+        barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
       />
 
       <SafeAreaView style={styles.container}>
