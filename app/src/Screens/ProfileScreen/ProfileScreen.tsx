@@ -86,14 +86,14 @@ const ProfileScreen = ({ navigation }: any) => {
     const streak = thing?.streak ?? 0; // Default to 0 if undefined
 
     if (item.isSocial) {
-      navigation.navigate('SocialThingDetailsScreen', {
+      navigation.navigate('SocialDetails', {
         thingId: item.thingId,
-        userCount: streak // You might want to fetch this data
+        userCount: 0
       });
     } else {
       navigation.navigate('Details', {
         thingId: item.thingId,
-        streakCount: streak // You might need to fetch this data
+        streakCount: streak
       });
     }
   };
@@ -127,7 +127,9 @@ const ProfileScreen = ({ navigation }: any) => {
         <Row styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <H2>@{logic.user?.username}</H2>
           {logic.userType === 'user' ? (
-            <Text style={{ color: styles.accent.color }}>{logic.profile?.level.currentScore} points</Text>
+            <>
+              <Text style={{ color: styles.accent.color }}>{logic.profile?.level.currentScore} points</Text>
+            </>
           ) : (
             <View
               style={{
@@ -144,6 +146,49 @@ const ProfileScreen = ({ navigation }: any) => {
             </View>
           )}
         </Row>
+        <Row
+          styles={{
+            alignItems: 'center',
+            gap: 5,
+            paddingTop: 10,
+            justifyContent: 'space-between'
+          }}
+        >
+          <Row
+            styles={{
+              alignItems: 'center',
+              gap: 5
+            }}
+          >
+            <Text style={{ color: styles.text.color }}>
+              {logic.profile?.level.currentLevel.name} ({logic.profile?.level.currentLevel.minThreshold})
+            </Text>
+          </Row>
+          <Text style={{ color: styles.text.color }}>
+            {logic.profile?.level.nextLevel.name} ({logic.profile?.level.nextLevel.minThreshold})
+          </Text>
+        </Row>
+
+        <Column
+          styles={{
+            width: '100%',
+            height: 5,
+            backgroundColor: styles.column.backgroundColor,
+            borderRadius: 20,
+            alignItems: 'flex-start',
+            justifyContent: 'center'
+          }}
+        >
+          <Column
+            styles={{
+              height: '100%',
+              width: `${calculatePointPercentage(logic.profile)}%`,
+              backgroundColor: styles.accent.backgroundColor,
+              borderRadius: 20
+            }}
+          />
+        </Column>
+        <Spacer space={15} />
         <FlatList
           data={logic.profile?.badges}
           horizontal
