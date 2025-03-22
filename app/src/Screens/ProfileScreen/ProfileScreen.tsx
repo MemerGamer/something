@@ -81,15 +81,18 @@ const ProfileScreen = ({ navigation }: any) => {
   };
 
   const handleImagePress = (item: { isSocial: boolean; thingId: any }) => {
+    const thing = logic.profile?.things.find((t) => t.id === item.thingId);
+    const streak = thing?.streak ?? 0; // Default to 0 if undefined
+
     if (item.isSocial) {
       navigation.navigate('SocialThingDetailsScreen', {
         thingId: item.thingId,
-        userCount: 0 // You might want to fetch this data
+        userCount: streak // You might want to fetch this data
       });
     } else {
-      navigation.navigate('ThingDetailsScreen', {
+      navigation.navigate('Details', {
         thingId: item.thingId,
-        streakCount: 0 // You might need to fetch this data
+        streakCount: streak // You might need to fetch this data
       });
     }
   };
@@ -277,12 +280,15 @@ const ProfileScreen = ({ navigation }: any) => {
           width: '100%'
         }}
       >
+        <H3 accent>My Memories</H3>
         {logic.galleryImages && logic.galleryImages.length > 0 ? (
           <MasonryFlashList
+            key={logic.galleryImages.length}
             data={logic.galleryImages}
+            extraData={logic.galleryImages}
             numColumns={3}
             estimatedItemSize={20} // Improves performance
-            keyExtractor={(item) => item.thingId}
+            keyExtractor={(item, index) => `${item.thingId}-${index}`}
             // space between items
             renderItem={({ item, index }) => (
               <View style={[{ padding: 3, flex: 1 }]}>
@@ -292,6 +298,7 @@ const ProfileScreen = ({ navigation }: any) => {
                     username={logic.user?.username as string}
                     createdAt={item.createdAt}
                     simple={true}
+                    style={{ height: 150, width: '100%' }}
                   />
                 </TouchableOpacity>
               </View>

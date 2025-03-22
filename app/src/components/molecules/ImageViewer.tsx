@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { DimensionValue, Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Column from '../atoms/Column';
 import H2 from '../atoms/H2';
@@ -14,11 +14,15 @@ type ImageViewerProps = {
   username: string;
   createdAt: string;
   simple?: boolean;
+  style?: {
+    width?: number | string;
+    height?: number | string;
+  };
 };
 
 const api = new ApiService();
 
-const ImageViewer = ({ uri, createdAt, name, username, simple = false }: ImageViewerProps) => {
+const ImageViewer = ({ uri, createdAt, name, username, simple = false, style }: ImageViewerProps) => {
   const styles = useThemedStyles();
   const [image, setImage] = useState('');
   // console.log('createdAt', createdAt);
@@ -59,8 +63,8 @@ const ImageViewer = ({ uri, createdAt, name, username, simple = false }: ImageVi
         <Image
           source={{ uri: image }}
           style={{
-            width: '100%',
-            height: 150,
+            width: (style?.width as DimensionValue) ?? '100%',
+            height: (style?.height as DimensionValue) ?? 150,
             resizeMode: 'contain',
             backgroundColor: styles.image.backgroundColor,
             borderRadius: 5
