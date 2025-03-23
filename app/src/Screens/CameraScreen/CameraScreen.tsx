@@ -14,6 +14,7 @@ import Column from '../../components/atoms/Column';
 import * as Icons from 'react-native-feather';
 import Label from '../../components/atoms/Label';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
 
 const api = new ApiService();
 
@@ -158,6 +159,7 @@ const RewardDisplay = ({
 };
 
 export default function CameraScreen({ route, navigation }: any) {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   const [permission, requestPermission] = useCameraPermissions();
   const [capturingImage, setCapturingImage] = useState(true);
@@ -320,7 +322,7 @@ export default function CameraScreen({ route, navigation }: any) {
       </Row>
       <View style={{ marginBottom: 50, alignItems: 'center' }}>
         <H3>
-          Current <H3 accent>Thing</H3> being captured
+          {t('Current')} <H3 accent>{t('Thing')}</H3> {t('being captured')}
         </H3>
         <H1>{route.params.name}</H1>
       </View>
