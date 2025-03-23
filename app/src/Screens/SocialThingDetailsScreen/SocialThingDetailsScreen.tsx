@@ -1,19 +1,22 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Column from '../../components/atoms/Column';
 import { useSocialThingDetailsScreenLogic } from './SocialThingDetailsScreen.logic';
 import Row from '../../components/atoms/Row';
 import H1 from '../../components/atoms/H1';
-import StreakChip from '../../components/atoms/StreakChip';
 import H3 from '../../components/atoms/H3';
 import H4 from '../../components/atoms/H4';
-import { ChevronLeft, ChevronsLeft } from 'react-native-feather';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { Copy } from 'react-native-feather';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import MyButton from '../../components/molecules/MyButton';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
 import { DateTime } from 'luxon';
+
 import { useTranslation } from 'react-i18next';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import QRCode from 'react-native-qrcode-svg';
 
 const SocialThingDetailsScreen = ({ route, navigation }: any) => {
   const { t } = useTranslation();
@@ -21,6 +24,7 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
   const { getDetails, thing, refreshing } = useSocialThingDetailsScreenLogic();
   const [userCount, setUserCount] = useState(0);
   const { thingId } = route.params;
+  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     getDetails(thingId);
@@ -29,6 +33,14 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
   useEffect(() => {
     setUserCount(thing?.sharedWith.length ?? 0);
   }, [thing]);
+
+  const copyToClipboard = (text: string) => {
+    Clipboard.setString(text);
+    Toast.show({
+      type: ALERT_TYPE.SUCCESS,
+      textBody: 'Copied to clipboard'
+    });
+  };
 
   if (!thing) {
     return (
@@ -100,10 +112,27 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
           <H4 accent>{thing.visibility?.charAt(0).toUpperCase().concat(thing.visibility.slice(1))}</H4>
         </Row>
         {thing.visibility === 'private' && (
-          <Row styles={{ gap: 5 }}>
-            <H4>{t('Join Code')}:</H4>
-            <H4 accent>{thing.joinCode}</H4>
-          </Row>
+          <>
+            <Row styles={{ gap: 5 }}>
+                <H4>{t('Join Code')}:</H4>
+                <H4 accent>{thing.joinCode}</H4>
+              <TouchableOpacity onPress={() => copyToClipboard(thing.joinCode ?? '')}>
+                <Copy stroke={styles.accent.backgroundColor} width={20} height={20} />
+              </TouchableOpacity>
+            </Row>
+            <Column styles={{ marginTop: 10 }}>
+              <Row>
+                <MyButton smalltext text={showQR ? 'Hide QR' : 'Show QR'} onPress={() => setShowQR(!showQR)} />
+              </Row>
+              {showQR && (
+                <Row styles={{ marginTop: 10, justifyContent: 'center' }}>
+                  <View style={{ alignItems: 'center', backgroundColor: 'white', borderRadius: 10, padding: 15 }}>
+                    <QRCode value={thing.joinCode} size={200} />
+                  </View>
+                </Row>
+              )}
+            </Column>
+          </>
         )}
       </Column>
       <Column>

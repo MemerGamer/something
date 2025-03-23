@@ -14,7 +14,7 @@ import H2 from '../../components/atoms/H2';
 import Label from '../../components/atoms/Label';
 import { LinearGradient } from 'expo-linear-gradient';
 import H3 from '../../components/atoms/H3';
-import { Bell, BellOff, Plus, Users } from 'react-native-feather';
+import { Bell, BellOff, Lock, Plus, Users } from 'react-native-feather';
 import Row from '../../components/atoms/Row';
 import MyButton from '../../components/molecules/MyButton';
 import { useSocialThingsLogic } from './SocialThings.logic';
@@ -126,6 +126,7 @@ const SocialThings = ({ navigation }: any) => {
 
               <Row styles={{ justifyContent: 'space-between', marginTop: 20 }}>
                 <Row styles={{ gap: 5, alignItems: 'center' }}>
+                  {item?.joinCode && <Lock color={styles.accent.color} />}
                   <Users color={styles.accent.color} />
                   <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>{item.userCount}</Text>
                 </Row>

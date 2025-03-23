@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "830603181888",
-    "project_id": "something-33869",
-    "storage_bucket": "something-33869.appspot.com"
+    "project_number": "641627461744",
+    "project_id": "something-417b4",
+    "storage_bucket": "something-417b4.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:830603181888:android:e50708f86d9fbbd9b444a5",
+        "mobilesdk_app_id": "1:641627461744:android:36d048dd276ff8dcb4fcb5",
         "android_client_info": {
           "package_name": "com.p1ritos.something"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDRvF1ZiN_kFbL8rzhqlcDNt1lm-XlsGQ4"
+          "current_key": "AIzaSyAlBDnUyszyRBU-AG1bN6e3E5bscf5m0vk"
         }
       ],
       "services": {
