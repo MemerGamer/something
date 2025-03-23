@@ -23,6 +23,7 @@ import { useEffect, useState } from 'react';
 import ApiService from '../../services/ApiService';
 import LoadingOverlay from '../../components/organisms/LoadingOverlay';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
 
 const api = new ApiService();
 
@@ -53,6 +54,7 @@ const ImageView = ({ url }: { url: string }) => {
 };
 
 const SocialThings = ({ navigation }: any) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   const logic = useSocialThingsLogic();
   useEffect(() => {
@@ -144,13 +146,13 @@ const SocialThings = ({ navigation }: any) => {
                     {!item.notified && (
                       <>
                         <Bell color={styles.accent.color} />
-                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>Get notified</Text>
+                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>{t('Get notified')}</Text>
                       </>
                     )}
                     {item.notified && (
                       <>
                         <BellOff color={styles.accent.color} />
-                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>Unsubscribe</Text>
+                        <Text style={{ color: styles.accent.color, fontWeight: 'bold' }}>{t('Unsubscribe')}</Text>
                       </>
                     )}
                   </Row>
@@ -196,7 +198,7 @@ const SocialThings = ({ navigation }: any) => {
         refreshControl={<RefreshControl refreshing={logic.refreshing} onRefresh={logic.getSocialThings} />}
       >
         <H2>
-          Social <H2 accent>Things</H2>
+          {t('Social')} <H2 accent>{t('Things')}</H2>
         </H2>
         {renderSocialThings()}
       </ScrollView>

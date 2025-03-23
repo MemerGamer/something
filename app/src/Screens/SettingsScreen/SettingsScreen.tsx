@@ -9,7 +9,7 @@ import MyButton from '../../components/molecules/MyButton';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
 import LabeledInput from '../../components/organisms/TextInputWithLabel';
 import { useProfileScreenLogic } from '../ProfileScreen/ProfileScreen.logic';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../components/organisms/LanguageSwitcher';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -33,6 +33,9 @@ const SettingsScreen = ({ navigation }: any) => {
     await AsyncStorage.setItem('language', lng);
     setSelectedLanguage(lng);
   };
+
+  const { t } = useTranslation();
+  const isHungarian = i18n.language === 'hu';
 
   const styles = useThemedStyles();
   const settingsLogic = useSettingsScreenLogic();
@@ -76,7 +79,13 @@ const SettingsScreen = ({ navigation }: any) => {
       }}
     >
       <H1>
-        Set-<H1 accent>Things</H1>
+        {isHungarian ? (
+          <H1 accent>{t('MySetThings')}</H1>
+        ) : (
+          <>
+            {t('Set')}-<H1 accent>{t('Things')}</H1>
+          </>
+        )}
       </H1>
       {isEditingUsername === false ? (
         <MyButton accent smalltext text="Change Username" onPress={handleStartEditing} />

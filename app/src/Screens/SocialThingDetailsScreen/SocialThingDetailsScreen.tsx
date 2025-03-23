@@ -13,8 +13,10 @@ import ImageViewer from '../../components/molecules/ImageViewer';
 import MyButton from '../../components/molecules/MyButton';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
 import { DateTime } from 'luxon';
+import { useTranslation } from 'react-i18next';
 
 const SocialThingDetailsScreen = ({ route, navigation }: any) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   const { getDetails, thing, refreshing } = useSocialThingDetailsScreenLogic();
   const [userCount, setUserCount] = useState(0);
@@ -94,18 +96,18 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
       </Row>
       <Column>
         <Row styles={{ gap: 5 }}>
-          <H4>Visibility:</H4>
+          <H4>{t('Visibility')}:</H4>
           <H4 accent>{thing.visibility?.charAt(0).toUpperCase().concat(thing.visibility.slice(1))}</H4>
         </Row>
         {thing.visibility === 'private' && (
           <Row styles={{ gap: 5 }}>
-            <H4>Join Code:</H4>
+            <H4>{t('Join Code')}:</H4>
             <H4 accent>{thing.joinCode}</H4>
           </Row>
         )}
       </Column>
       <Column>
-        <H4>Schedule</H4>
+        <H4>{t('Schedule')}</H4>
         <Text style={{ marginTop: 10, color: styles.text.color }}>{scheduleText()}</Text>
       </Column>
       <Column
@@ -113,7 +115,9 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
           gap: 10
         }}
       >
-        <H4>People Joined ({userCount})</H4>
+        <H4>
+          {t('People Joined')} ({userCount})
+        </H4>
         {thing.sharedWith.map((shared) => (
           <Column
             key={shared}
@@ -138,7 +142,7 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
             gap: 10
           }}
         >
-          <H4>Description</H4>
+          <H4>{t('Description')}</H4>
           <Text style={{ color: styles.text.color }}>{thing.description}</Text>
         </Column>
       )}
@@ -149,12 +153,12 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
             alignItems: 'center'
           }}
         >
-          <H4>Memories</H4>
+          <H4>{t('Memories')}</H4>
           <MyButton
             smalltext
             icon
             accent
-            text={'New'}
+            text={t('New')}
             onPress={() => {
               navigation.navigate('Camera', {
                 name: thing.name,
