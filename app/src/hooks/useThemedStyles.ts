@@ -105,7 +105,8 @@ export const useThemedStyles = () => {
       alignItems: 'center',
       marginBottom: 50,
       marginRight: 20,
-      marginLeft: 50
+      marginLeft: 50,
+      borderColor: colors.text
     },
     send: {
       width: 100,

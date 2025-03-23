@@ -7,8 +7,10 @@ import Column from '../../components/atoms/Column';
 import H1 from '../../components/atoms/H1';
 import { useBadgeScreenLogic } from './BadgeScreen.logic';
 import { MasonryFlashList } from '@shopify/flash-list';
+import { useTranslation } from 'react-i18next';
 
 const BadgeScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   const logic = useBadgeScreenLogic();
 
@@ -34,10 +36,10 @@ const BadgeScreen = ({ navigation }: any) => {
         {item.icon ? (
           <Icon name={item.icon as any} color={item.earned ? styles.accent.backgroundColor : 'gray'} />
         ) : (
-          <Text>No icon for this badge: {item.icon}</Text>
+          <Text>t(No icon for this badge): {item.icon}</Text>
         )}
         {item.name.split(' ').map((word: string, index: number) => (
-          <Label key={index} text={word} />
+          <Label key={index} text={t(word)} />
         ))}
       </Column>
     </TouchableOpacity>

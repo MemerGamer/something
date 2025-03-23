@@ -7,6 +7,7 @@ import ApiService from '../../services/ApiService';
 import Row from '../atoms/Row';
 import { DateTime } from 'luxon';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
 
 type ImageViewerProps = {
   uri: string;
@@ -23,6 +24,7 @@ type ImageViewerProps = {
 const api = new ApiService();
 
 const ImageViewer = ({ uri, createdAt, name, username, simple = false, style }: ImageViewerProps) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   const [image, setImage] = useState('');
   // console.log('createdAt', createdAt);
@@ -81,7 +83,7 @@ const ImageViewer = ({ uri, createdAt, name, username, simple = false, style }: 
             borderRadius: 0
           }}
         >
-          <Text style={{ color: 'white', fontSize: 10 }}>{date}</Text>
+          <Text style={{ color: 'white', fontSize: 10 }}>{t(date)}</Text>
         </View>
       </View>
     );

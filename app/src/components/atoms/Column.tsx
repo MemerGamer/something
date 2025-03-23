@@ -11,7 +11,7 @@ type ColumProps = {
 };
 
 const Column = ({ children, styles, scrollable, refreshing, getData }: ColumProps) => {
-  const { theme, colors, setAppMode } = useContext(ThemeContext);
+  useContext(ThemeContext);
 
   if (scrollable) {
     return (

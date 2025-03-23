@@ -14,6 +14,7 @@ import Column from '../../components/atoms/Column';
 import * as Icons from 'react-native-feather';
 import Label from '../../components/atoms/Label';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
 
 const api = new ApiService();
 
@@ -95,7 +96,7 @@ const RewardDisplay = ({
                   marginTop: 5
                 }}
               >
-                <Icon color={'black'} />
+                <Icon color={styles.text.color} />
                 <Label text={reward.badge.name} />
               </Column>
             </Column>
@@ -158,6 +159,7 @@ const RewardDisplay = ({
 };
 
 export default function CameraScreen({ route, navigation }: any) {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   const [permission, requestPermission] = useCameraPermissions();
   const [capturingImage, setCapturingImage] = useState(true);
@@ -302,25 +304,25 @@ export default function CameraScreen({ route, navigation }: any) {
         {capturingImage && <ActivityIndicator size="large" />}
         {!capturingImage && !pauseImageCapture && (
           <TouchableOpacity style={styles.change} onPress={toggleCameraType}>
-            <RefreshCcw color={'black'} />
+            <RefreshCcw color={styles.text.color} />
           </TouchableOpacity>
         )}
         {pauseImageCapture && !capturingImage && (
           <TouchableOpacity style={styles.retake} onPress={retakeImage}>
             <Text>Retake</Text>
-            <RefreshCcw color={'black'} />
+            <RefreshCcw color={styles.text.color} />
           </TouchableOpacity>
         )}
         {pauseImageCapture && !capturingImage && (
           <TouchableOpacity style={styles.send} onPress={sendImage}>
-            <Text>Send</Text>
-            <Send color={'black'} />
+            <Text>{t('Send')}</Text>
+            <Send color={styles.text.color} />
           </TouchableOpacity>
         )}
       </Row>
       <View style={{ marginBottom: 50, alignItems: 'center' }}>
         <H3>
-          Current <H3 accent>Thing</H3> being captured
+          {t('Current')} <H3 accent>{t('Thing')}</H3> {t('being captured')}
         </H3>
         <H1>{route.params.name}</H1>
       </View>

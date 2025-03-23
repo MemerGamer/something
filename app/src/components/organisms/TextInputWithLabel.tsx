@@ -4,6 +4,7 @@ import Column from '../atoms/Column';
 import MyInput from '../molecules/MyInput';
 import { ApiError, extractError } from '../../services/ApiService';
 import ErrorText from '../atoms/ErrorText';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   label: string;
@@ -17,14 +18,15 @@ type Props = {
 };
 
 const LabeledInput = ({ label, placeholder, value, onChangeText, secure, error, path, multiline }: Props) => {
+  const { t } = useTranslation();
   return (
     <Column styles={{ gap: 5 }}>
-      <Label text={label} />
+      <Label text={t(label)} />
       <MyInput
         secure={secure}
-        text={value}
+        text={t(value)}
         setText={onChangeText}
-        placeholder={placeholder + (multiline ? '\n\n\n' : '')}
+        placeholder={t(placeholder + (multiline ? '\n\n\n' : ''))}
         error={!!extractError(error, path ?? [])}
         multiline={multiline}
       />

@@ -16,6 +16,8 @@ import { useThemedStyles } from '../../hooks/useThemedStyles';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import { MasonryFlashList } from '@shopify/flash-list';
 import OrganizationThingCard from '../../components/molecules/OrganizationThingCard';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../services/i18n';
 
 type NonUndefined<T> = T extends undefined ? never : T;
 interface GalleryItem {
@@ -26,6 +28,8 @@ interface GalleryItem {
 }
 
 const ProfileScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
+  const isHungarian = i18n.language === 'hu';
   const styles = useThemedStyles();
   const logic = useProfileScreenLogic();
 
@@ -82,7 +86,7 @@ const ProfileScreen = ({ navigation }: any) => {
   };
 
   const handleImagePress = (item: { isSocial: boolean; thingId: any }) => {
-    const thing = logic.profile?.things.find((t) => t.id === item.thingId);
+    const thing = logic.profile?.things.find((t1) => t1.id === item.thingId);
     const streak = thing?.streak ?? 0; // Default to 0 if undefined
 
     if (item.isSocial) {
@@ -111,7 +115,7 @@ const ProfileScreen = ({ navigation }: any) => {
       }}
     >
       <H1>
-        Profile <H1 accent>Things</H1>
+        {t('Profile')} <H1 accent>{t('Things')}</H1>
       </H1>
       {renderButton()}
       {logic.userType === 'user' ? (
@@ -128,7 +132,9 @@ const ProfileScreen = ({ navigation }: any) => {
           >
             <Row styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
               <H2>@{logic.user?.username}</H2>
-              <Text style={{ color: styles.accent.color }}>{logic.profile?.level.currentScore} points</Text>
+              <Text style={{ color: styles.accent.color }}>
+                {logic.profile?.level.currentScore} {t('points')}
+              </Text>
             </Row>
             <Row
               styles={{
@@ -193,7 +199,13 @@ const ProfileScreen = ({ navigation }: any) => {
                       height: 75
                     }}
                   >
-                    <Text style={{ color: styles.accent.backgroundColor }}>See all badges</Text>
+                    {isHungarian ? (
+                      <Text style={{ color: styles.accent.backgroundColor }}>{t('MySeeAllBadges')}</Text>
+                    ) : (
+                      <>
+                        <Text style={{ color: styles.accent.backgroundColor }}>{t('See all badges')}</Text>
+                      </>
+                    )}
                   </Column>
                 </TouchableOpacity>
               }
@@ -217,10 +229,12 @@ const ProfileScreen = ({ navigation }: any) => {
                       // if item.earned is false make the icon gray
                       <Icon name={item.icon as any} color={item.earned ? styles.accent.backgroundColor : 'gray'} />
                     ) : (
-                      <Text>No icon for this badge: {item.icon}</Text>
+                      <Text>
+                        {t('No icon for this badge')}: {item.icon}
+                      </Text>
                     )}
                     {item.name.split(' ').map((word: string, index: number) => (
-                      <Label key={index} text={word} />
+                      <Label key={index} text={t(word)} />
                     ))}
                   </Column>
                 );
@@ -245,7 +259,13 @@ const ProfileScreen = ({ navigation }: any) => {
               }}
             >
               <H3>
-                See <H3 accent>leaderboard</H3>
+                {isHungarian ? (
+                  <H3 accent>{t('MyLeaderboard')}</H3>
+                ) : (
+                  <>
+                    {t('See')} <H3 accent>{t('leaderboard')}</H3>
+                  </>
+                )}
               </H3>
             </Column>
           </Pressable>
@@ -261,7 +281,13 @@ const ProfileScreen = ({ navigation }: any) => {
               width: '100%'
             }}
           >
-            <H3 accent>My Things</H3>
+            {isHungarian ? (
+              <H3 accent>{t('MyThings')}</H3>
+            ) : (
+              <>
+                <H3 accent>{t('My Things')}</H3>
+              </>
+            )}
             {/* TODO:Fix two children with same key problem which occurs, because things are shared */}
             <FlatList
               scrollEnabled={false}
@@ -294,7 +320,13 @@ const ProfileScreen = ({ navigation }: any) => {
               width: '100%'
             }}
           >
-            <H3 accent>My Memories</H3>
+            {isHungarian ? (
+              <H3 accent>{t('MyMemories')}</H3>
+            ) : (
+              <>
+                <H3 accent>{t('My Memories')}</H3>
+              </>
+            )}
             {logic.galleryImages && logic.galleryImages.length > 0 ? (
               <MasonryFlashList
                 key={logic.galleryImages.length}
@@ -318,9 +350,13 @@ const ProfileScreen = ({ navigation }: any) => {
                   </View>
                 )}
               />
+            ) : isHungarian ? (
+              <Text style={{ marginTop: 16, color: styles.text.color, textAlign: 'center', padding: 20 }}>
+                {t('MyNoMemoriesCapturedYet')}
+              </Text>
             ) : (
               <Text style={{ marginTop: 16, color: styles.text.color, textAlign: 'center', padding: 20 }}>
-                No memories captured yet
+                {t('No memories captured yet')}
               </Text>
             )}
           </Column>

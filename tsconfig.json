@@ -7,6 +7,7 @@
     },
     "include": [
         "./api/src/**/*.ts",
-        "./app/src/**/*"
+        "./app/src/**/*",
+        "./app/assets/**/*"
     ]
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
 
 type MyInputProps = {
   text: string;
@@ -14,10 +15,11 @@ type MyInputProps = {
 };
 
 const MyInput = ({ text, setText, placeholder, secure, error: inputError, multiline }: MyInputProps) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   return (
     <TextInput
-      placeholder={placeholder}
+      placeholder={t(placeholder)}
       style={[
         styles.input,
         inputError && styles.error,
@@ -25,7 +27,7 @@ const MyInput = ({ text, setText, placeholder, secure, error: inputError, multil
         { color: styles.text.color }
       ]}
       onChangeText={setText}
-      value={text}
+      value={t(text)}
       secureTextEntry={secure}
       multiline={multiline}
     />

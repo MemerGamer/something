@@ -6,6 +6,7 @@ import Row from '../atoms/Row';
 import StreakChip from '../atoms/StreakChip';
 import { DateTime } from 'luxon';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
 
 type ThingCardProps = {
   name: string;
@@ -17,6 +18,7 @@ type ThingCardProps = {
 };
 
 const ThingCard = ({ navigation, name, startTime, endTime, streak, id }: ThingCardProps) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   startTime = DateTime.fromFormat(startTime, 'hh:mm:ss', { zone: 'utc' })
     .toLocal()
@@ -33,7 +35,7 @@ const ThingCard = ({ navigation, name, startTime, endTime, streak, id }: ThingCa
     >
       <Column styles={styles.cardContainer}>
         <Row styles={{ justifyContent: 'space-between' }}>
-          <H3>{name}</H3>
+          <H3>{t(name)}</H3>
           <StreakChip streak={streak} />
         </Row>
         <Text style={styles.cardTime}>

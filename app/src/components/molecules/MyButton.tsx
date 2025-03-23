@@ -5,6 +5,7 @@ import H4 from '../atoms/H4';
 import H3 from '../atoms/H3';
 import { Camera } from 'react-native-feather';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
 
 type MyButtonProps = {
   text: string;
@@ -33,6 +34,7 @@ const MyButton = ({
   disabled,
   errorText
 }: MyButtonProps) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   if (small) {
     return (
@@ -56,7 +58,7 @@ const MyButton = ({
         ]}
       >
         {icon && <Camera color={styles.accent.color} style={{ marginRight: 10 }} />}
-        {!smalltext ? <H4 accent={accent}>{text}</H4> : <H3 accent={accent}>{text}</H3>}
+        {!smalltext ? <H4 accent={accent}>{t(text)}</H4> : <H3 accent={accent}>{t(text)}</H3>}
       </Column>
       <Text style={{ color: styles.error.color }}>{errorText}</Text>
     </Pressable>
