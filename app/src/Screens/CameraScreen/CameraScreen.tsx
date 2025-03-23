@@ -96,7 +96,7 @@ const RewardDisplay = ({
                   marginTop: 5
                 }}
               >
-                <Icon color={'black'} />
+                <Icon color={styles.text.color} />
                 <Label text={reward.badge.name} />
               </Column>
             </Column>
@@ -304,19 +304,19 @@ export default function CameraScreen({ route, navigation }: any) {
         {capturingImage && <ActivityIndicator size="large" />}
         {!capturingImage && !pauseImageCapture && (
           <TouchableOpacity style={styles.change} onPress={toggleCameraType}>
-            <RefreshCcw color={'black'} />
+            <RefreshCcw color={styles.text.color} />
           </TouchableOpacity>
         )}
         {pauseImageCapture && !capturingImage && (
           <TouchableOpacity style={styles.retake} onPress={retakeImage}>
             <Text>Retake</Text>
-            <RefreshCcw color={'black'} />
+            <RefreshCcw color={styles.text.color} />
           </TouchableOpacity>
         )}
         {pauseImageCapture && !capturingImage && (
           <TouchableOpacity style={styles.send} onPress={sendImage}>
-            <Text>Send</Text>
-            <Send color={'black'} />
+            <Text>{t('Send')}</Text>
+            <Send color={styles.text.color} />
           </TouchableOpacity>
         )}
       </Row>
