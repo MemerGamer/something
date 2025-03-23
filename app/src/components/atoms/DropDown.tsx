@@ -18,7 +18,7 @@ const DropDown = ({ data, selectedValue, setSelectedValue }: DropDownProps) => {
   return (
     <View style={styles.container}>
       {isFocus || selectedValue ? (
-        <Text style={[styles.label, isFocus && { color: styles.accent.color }]}>t(Set visibility)</Text>
+        <Text style={[styles.label, isFocus && { color: styles.accent.color }]}>{t('Set visibility')}</Text>
       ) : null}
 
       <Dropdown
