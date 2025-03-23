@@ -10,8 +10,13 @@ import { useAppDispatch } from '../../hooks/hooks';
 import { NewThingDTO, setScheduleForNewPersonalThing } from '../../redux/thing/ThingStack';
 import { DateTime } from 'luxon';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../services/i18n';
 
 const SetTimeIntervals = ({ navigation }: any) => {
+  const { t } = useTranslation();
+  const isHungarian = i18n.language === 'hu';
+
   const dispatch = useAppDispatch();
 
   const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
@@ -128,7 +133,7 @@ const SetTimeIntervals = ({ navigation }: any) => {
         </BigText>
       </Pressable>
 
-      <BigText>{'   to   '}</BigText>
+      <BigText>{t('   to   ')}</BigText>
 
       {/* END HOUR */}
       <Pressable onPress={() => showTimepicker(endTime, onEndTimeChange)}>
@@ -136,6 +141,8 @@ const SetTimeIntervals = ({ navigation }: any) => {
           {formatTime(endTime)}
         </BigText>
       </Pressable>
+
+      {isHungarian && <BigText>{t('between')}</BigText>}
     </Row>
   );
 
@@ -246,7 +253,15 @@ const SetTimeIntervals = ({ navigation }: any) => {
     >
       <Column styles={{ gap: 20 }}>
         <BigText>
-          I want to do this <BigText accent>Thing</BigText> from
+          {isHungarian ? (
+            <>
+              <BigText accent>{t('MyIWantToDoThis1')}</BigText> {t('MyIWantToDoThis2')}
+            </>
+          ) : (
+            <>
+              {t('I want to do this')} <BigText accent>{t('Thing')}</BigText> {t('from')}
+            </>
+          )}
         </BigText>
 
         <TimeSelectRow />

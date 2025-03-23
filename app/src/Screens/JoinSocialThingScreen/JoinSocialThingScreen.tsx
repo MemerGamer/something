@@ -7,10 +7,17 @@ import H1 from '../../components/atoms/H1';
 import MyInput from '../../components/molecules/MyInput';
 import MyButton from '../../components/molecules/MyButton';
 import Row from '../../components/atoms/Row';
+
+import { useTranslation } from 'react-i18next';
+import i18n from '../../services/i18n';
 import { useJoinSocialThingScreenLogic } from './JoinSocialThingScreen.logic';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
 
+
 const JoinSocialThingScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
+  const isHungarian = i18n.language === 'hu';
+
   const { handleCancel, handleJoinSocialThing, joinCode, setJoinCode } = useJoinSocialThingScreenLogic(navigation);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -42,7 +49,18 @@ const JoinSocialThingScreen = ({ navigation }: any) => {
         }}
       >
         <H1>
-          Join <H1 accent>Social Thing</H1>
+          {isHungarian ? (
+            <>
+              {t('Join')} <H1 accent>{t('MySocialThing')}</H1>
+            </>
+          ) : (
+            <>
+              {t('Join')}{' '}
+              <H1 accent>
+                {t('Social')} {t('Thing')}
+              </H1>
+            </>
+          )}
         </H1>
         <MyInput
           text={joinCode.length < 10 ? joinCode.toLowerCase() : joinCode.toLowerCase().substring(0, 10)}

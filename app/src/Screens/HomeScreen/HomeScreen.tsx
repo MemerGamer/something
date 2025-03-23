@@ -10,8 +10,12 @@ import { Plus } from 'react-native-feather';
 import ImageViewer from '../../components/molecules/ImageViewer';
 import { useNotifications } from '../../hooks/notifications';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../services/i18n';
 
 const HomeScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
+  const isHungarian = i18n.language === 'hu';
   const styles = useThemedStyles();
   useNotifications();
 
@@ -23,7 +27,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   const renderTodayThings = () => {
     if (logic.userThings.home.length === 0) {
-      return <Text>No things for today</Text>;
+      return <Text>{t('MyNoThingsForToday')}</Text>;
     }
 
     return (
@@ -49,7 +53,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   const renderOtherThings = () => {
     if (logic.otherThings.home.length === 0) {
-      return <Text>None of your friends uploaded anything yet</Text>;
+      return <Text style={styles.text}>{t('NoFriendUpload')}</Text>;
     }
 
     return (
@@ -97,12 +101,24 @@ const HomeScreen = ({ navigation }: any) => {
         refreshControl={<RefreshControl refreshing={logic.refreshing} onRefresh={logic.getHomeThings} />}
       >
         <H2>
-          Today's Latest <H2 accent>Things</H2>
+          {isHungarian ? (
+            <H2 accent>{t('MyTodaysLatestThings')}</H2>
+          ) : (
+            <>
+              {t('Todays')} {t('Latest')} <H2 accent>{t('Things')}</H2>
+            </>
+          )}
         </H2>
         {renderTodayThings()}
         <Spacer space={20} />
         <H2>
-          Friends <H2 accent>Things</H2>
+          {isHungarian ? (
+            <H2 accent>{t('MyFriendsThings')}</H2>
+          ) : (
+            <>
+              {t('Friends')} <H2 accent>{t('Things')}</H2>
+            </>
+          )}
         </H2>
         {renderOtherThings()}
       </ScrollView>
