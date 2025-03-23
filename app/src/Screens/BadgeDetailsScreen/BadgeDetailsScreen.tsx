@@ -4,8 +4,10 @@ import { useThemedStyles } from '../../hooks/useThemedStyles';
 import Column from '../../components/atoms/Column';
 import H1 from '../../components/atoms/H1';
 import Icon from 'react-native-remix-icon';
+import { useTranslation } from 'react-i18next';
 
 const BadgeDetailsScreen = ({ route }: any) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles();
   const { badge } = route.params;
 
@@ -42,7 +44,7 @@ const BadgeDetailsScreen = ({ route }: any) => {
         paddingHorizontal: 23
       }}
     >
-      <H1>{badge.name}</H1>
+      <H1>{t(badge.name)}</H1>
       <View
         style={{
           alignItems: 'center',
@@ -53,10 +55,10 @@ const BadgeDetailsScreen = ({ route }: any) => {
         {badge.icon ? (
           <Icon name={badge.icon as any} color={badge.earned ? styles.accent.backgroundColor : 'gray'} size={100} />
         ) : (
-          <Text>No icon for this badge: {badge.icon}</Text>
+          <Text>t(No icon for this badge): {badge.icon}</Text>
         )}
       </View>
-      <Text style={{ marginTop: 20, textAlign: 'center', color: styles.text.color }}>{badge.description}</Text>
+      <Text style={{ marginTop: 20, textAlign: 'center', color: styles.text.color }}>{t(badge.description)}</Text>
       {/* Progress bar */}
       <Column
         styles={{
@@ -82,12 +84,14 @@ const BadgeDetailsScreen = ({ route }: any) => {
       {/* Optional: Display progress text */}
       {badge.progress !== undefined && !badge.earned && (
         <Text style={{ marginTop: 10, textAlign: 'center', color: styles.text.color }}>
-          Progress: {Math.round(badge.progress * 100)}%
+          t(Progress: {Math.round(badge.progress * 100)}%)
         </Text>
       )}
 
       {badge.earned && (
-        <Text style={{ marginTop: 10, textAlign: 'center', color: styles.accent.backgroundColor }}>Badge Earned!</Text>
+        <Text style={{ marginTop: 10, textAlign: 'center', color: styles.accent.backgroundColor }}>
+          t(Badge Earned!)
+        </Text>
       )}
     </Column>
   );

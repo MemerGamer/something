@@ -1,7 +1,7 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Column from '../../components/atoms/Column';
 import { useSettingsScreenLogic } from './SettingsScreen.logic';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import H1 from '../../components/atoms/H1';
 import H3 from '../../components/atoms/H3';
 import Row from '../../components/atoms/Row';
@@ -9,8 +9,31 @@ import MyButton from '../../components/molecules/MyButton';
 import { useThemedStyles } from '../../hooks/useThemedStyles';
 import LabeledInput from '../../components/organisms/TextInputWithLabel';
 import { useProfileScreenLogic } from '../ProfileScreen/ProfileScreen.logic';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '../../components/organisms/LanguageSwitcher';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingsScreen = ({ navigation }: any) => {
+  const { i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+
+  useEffect(() => {
+    const loadLanguage = async () => {
+      const storedLang = await AsyncStorage.getItem('language');
+      if (storedLang) {
+        i18n.changeLanguage(storedLang);
+        setSelectedLanguage(storedLang);
+      }
+    };
+    loadLanguage();
+  }, []);
+
+  const handleLanguageChange = async (lng: string) => {
+    await i18n.changeLanguage(lng);
+    await AsyncStorage.setItem('language', lng);
+    setSelectedLanguage(lng);
+  };
+
   const styles = useThemedStyles();
   const settingsLogic = useSettingsScreenLogic();
   const profileLogic = useProfileScreenLogic();
@@ -91,6 +114,7 @@ const SettingsScreen = ({ navigation }: any) => {
         <MyButton accent smalltext text="Dark" onPress={settingsLogic.handleToggleTheme} />
         <MyButton accent smalltext text="System" onPress={settingsLogic.handleToggleTheme} />
       </Row>
+      <LanguageSwitcher language={selectedLanguage} visible={true} onChange={handleLanguageChange} />
       <Column
         styles={{
           bottom: 0

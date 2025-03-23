@@ -17,10 +17,12 @@ import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 import { authSelector } from '../../redux/auth/AuthSlice';
 import ApiService from '../../services/ApiService';
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 
 export const RootTabNavigation = () => {
+  const { t } = useTranslation();
   const { loading, user, userType, signInSilently } = useRootNavigationLogic();
   const { theme, colors } = useContext(ThemeContext);
 
@@ -69,7 +71,7 @@ export const RootTabNavigation = () => {
             component={HomeStackNavigation}
             options={({ route }) => ({
               tabBarStyle: getTabBarStyle(route, ['Camera', 'CreateThing', 'Details', 'SetTime']),
-              title: 'Home',
+              title: t('Home'),
               tabBarIcon: ({ color }) => <Home color={color} />
             })}
           />
@@ -78,7 +80,7 @@ export const RootTabNavigation = () => {
             component={SocialStackNavigation}
             options={({ route }) => ({
               tabBarStyle: getTabBarStyle(route, ['Camera', 'CreateSocialThing', 'SocialDetails', 'SetSocialTime']),
-              title: 'Social',
+              title: t('Social'),
               tabBarIcon: ({ color }) => <Users color={color} />
             })}
           />
@@ -87,7 +89,7 @@ export const RootTabNavigation = () => {
             component={ProfileStackNavigation}
             options={({ route }) => ({
               tabBarStyle: getTabBarStyle(route, ['Leaderboard', 'Details', 'BadgeScreen']),
-              title: 'Profile',
+              title: t('Profile'),
               tabBarIcon: ({ color }) => <User color={color} />
             })}
           />
@@ -99,7 +101,7 @@ export const RootTabNavigation = () => {
             component={OrganizationHomeStackNavigation}
             options={({ route }) => ({
               tabBarStyle: getTabBarStyle(route, ['Camera', 'CreateSocialThing', 'SocialDetails', 'SetSocialTime']),
-              title: 'Home',
+              title: t('Home'),
               tabBarIcon: ({ color }) => <Home color={color} />
             })}
           />
@@ -108,7 +110,7 @@ export const RootTabNavigation = () => {
             component={ProfileStackNavigation}
             options={({ route }) => ({
               tabBarStyle: getTabBarStyle(route, ['Leaderboard', 'Details', 'BadgeScreen']),
-              title: 'Profile',
+              title: t('Profile'),
               tabBarIcon: ({ color }) => <User color={color} />
             })}
           />
