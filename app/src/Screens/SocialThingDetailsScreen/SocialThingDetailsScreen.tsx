@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Column from '../../components/atoms/Column';
 import { useSocialThingDetailsScreenLogic } from './SocialThingDetailsScreen.logic';
@@ -14,12 +14,14 @@ import { useThemedStyles } from '../../hooks/useThemedStyles';
 import { DateTime } from 'luxon';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import QRCode from 'react-native-qrcode-svg';
 
 const SocialThingDetailsScreen = ({ route, navigation }: any) => {
   const styles = useThemedStyles();
   const { getDetails, thing, refreshing } = useSocialThingDetailsScreenLogic();
   const [userCount, setUserCount] = useState(0);
   const { thingId } = route.params;
+  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     getDetails(thingId);
@@ -107,13 +109,27 @@ const SocialThingDetailsScreen = ({ route, navigation }: any) => {
           <H4 accent>{thing.visibility?.charAt(0).toUpperCase().concat(thing.visibility.slice(1))}</H4>
         </Row>
         {thing.visibility === 'private' && (
-          <Row styles={{ gap: 5 }}>
-            <H4>Join Code:</H4>
-            <H4 accent>{thing.joinCode}</H4>
-            <TouchableOpacity onPress={() => copyToClipboard(thing.joinCode ?? '')}>
-              <Copy stroke={styles.accent.backgroundColor} width={20} height={20} />
-            </TouchableOpacity>
-          </Row>
+          <>
+            <Row styles={{ gap: 5 }}>
+              <H4>Join Code:</H4>
+              <H4 accent>{thing.joinCode}</H4>
+              <TouchableOpacity onPress={() => copyToClipboard(thing.joinCode ?? '')}>
+                <Copy stroke={styles.accent.backgroundColor} width={20} height={20} />
+              </TouchableOpacity>
+            </Row>
+            <Column styles={{ marginTop: 10 }}>
+              <Row>
+                <MyButton smalltext text={showQR ? 'Hide QR' : 'Show QR'} onPress={() => setShowQR(!showQR)} />
+              </Row>
+              {showQR && (
+                <Row styles={{ marginTop: 10, justifyContent: 'center' }}>
+                  <View style={{ alignItems: 'center', backgroundColor: 'white', borderRadius: 10, padding: 15 }}>
+                    <QRCode value={thing.joinCode} size={200} />
+                  </View>
+                </Row>
+              )}
+            </Column>
+          </>
         )}
       </Column>
       <Column>

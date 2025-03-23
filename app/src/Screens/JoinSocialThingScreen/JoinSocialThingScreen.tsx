@@ -1,13 +1,33 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Camera, CameraView } from 'expo-camera';
 import Column from '../../components/atoms/Column';
 import H1 from '../../components/atoms/H1';
 import MyInput from '../../components/molecules/MyInput';
 import MyButton from '../../components/molecules/MyButton';
-import { useJoinSocialThingScreenLogic } from './JoinSocialThingScreen.logic';
 import Row from '../../components/atoms/Row';
+import { useJoinSocialThingScreenLogic } from './JoinSocialThingScreen.logic';
+import { useThemedStyles } from '../../hooks/useThemedStyles';
 
 const JoinSocialThingScreen = ({ navigation }: any) => {
   const { handleCancel, handleJoinSocialThing, joinCode, setJoinCode } = useJoinSocialThingScreenLogic(navigation);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const styles = useThemedStyles();
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  const handleBarCodeScanned = ({ data }: { data: string }) => {
+    setJoinCode(data);
+    setIsScanning(false);
+    handleJoinSocialThing();
+  };
 
   return (
     <ScrollView>
@@ -38,7 +58,32 @@ const JoinSocialThingScreen = ({ navigation }: any) => {
           <MyButton text={'Cancel'} onPress={handleCancel} />
           <MyButton text={'Join'} onPress={handleJoinSocialThing} accent />
         </Row>
+        <Row styles={{ alignItems: 'center', justifyContent: 'center' }}>
+          <MyButton text={'Scan QR Code'} onPress={() => setIsScanning(true)} />
+        </Row>
       </Column>
+      {isScanning && hasPermission !== null && (
+        <Modal animationType="slide" transparent={false} visible={isScanning}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: styles.container.backgroundColor,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {hasPermission === true ? (
+              <CameraView
+                style={{ width: '90%', height: '70%', borderRadius: 10, overflow: 'hidden' }}
+                onBarcodeScanned={handleBarCodeScanned}
+              />
+            ) : (
+              <Text style={{ color: styles.text.color, marginBottom: 20 }}>No access to camera</Text>
+            )}
+            <MyButton text={'Close'} onPress={() => setIsScanning(false)} />
+          </View>
+        </Modal>
+      )}
     </ScrollView>
   );
 };
