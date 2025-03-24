@@ -12,6 +12,7 @@ const rewardService = new RewardService();
 
 export const imageRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(uploadImage, async (c) => {
+    return c.json(reasonPhrase(StatusCodes.OK), StatusCodes.OK);
     const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
 
     const body = await c.req.parseBody();
