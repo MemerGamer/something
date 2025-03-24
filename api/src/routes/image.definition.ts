@@ -20,15 +20,15 @@ export const uploadImage = createRoute({
           .default('multipart/form-data')
           .openapi({ param: { name: 'Content-Type', in: 'header' } })
       })
-    ],
-    body: formc(
-      z
-        .object({
-          image: z.any().openapi({ format: 'binary' }).optional(),
-          thingId: z.string().optional()
-        })
-        .optional()
-    )
+    ]
+    // body: formc(
+    //   z
+    //     .object({
+    //       image: z.any().openapi({ format: 'binary' }).optional(),
+    //       thingId: z.string().optional()
+    //     })
+    //     .optional()
+    // )
   },
   responses: {
     ...defaultResponses,

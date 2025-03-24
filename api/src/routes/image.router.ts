@@ -12,34 +12,28 @@ const rewardService = new RewardService();
 
 export const imageRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(uploadImage, async (c) => {
+    const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
+
+    let body = null;
     try {
-      const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
-      console.log(await c.req.json());
-      const body = await c.req.parseBody();
-      const image = (await body['image']) as File;
-      const thingId = body['thingId'] as string;
-
-      if (!image || !(image instanceof File)) {
-        console.error('Invalid or missing image file:', image);
-        return c.text('Invalid or missing image file', StatusCodes.BAD_REQUEST);
-      }
-
-      if (!thingId) {
-        console.error('Missing thingId');
-        return c.text('thingId is required', StatusCodes.BAD_REQUEST);
-      }
-
-      const data = await image.arrayBuffer();
-      const filename = await imageService.saveImageToDisk(data);
-
-      const reward = await rewardService.handleImageUpload(userId, thingId.toString(), filename);
-      return c.json(reward, StatusCodes.OK);
+      body = await c.req.parseBody();
     } catch (error) {
-      console.error('Upload error:', error);
-      const formData = await c.req.formData();
-      console.log('FormData received:', formData);
-      return c.text('Internal Server Error', StatusCodes.INTERNAL_SERVER_ERROR);
+      console.error(error);
+      console.error(await c.req.text());
+      return c.json({ error: 'Invalid request body' }, StatusCodes.BAD_REQUEST);
     }
+    if (!body) {
+      return c.json({ error: 'Invalid request body' }, StatusCodes.BAD_REQUEST);
+    }
+
+    const image = (await body['image']) as File;
+    const thingId = body['thingId'] as string;
+
+    const data = await image.arrayBuffer();
+    const filename = await imageService.saveImageToDisk(data);
+
+    const reward = await rewardService.handleImageUpload(userId, thingId, filename);
+    return c.json(reward, StatusCodes.OK);
   })
 
   .openapi(serveImage, async (c, next) => {
