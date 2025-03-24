@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import Column from '../../components/atoms/Column';
 import Row from '../../components/atoms/Row';
@@ -114,7 +114,7 @@ const SetTimeIntervals = ({ navigation }: any) => {
   };
 
   const formatTime = (date: Date) => {
-    return DateTime.fromJSDate(date).toFormat('HH:mm');
+    return DateTime.fromJSDate(date).toFormat('HH mm');
   };
 
   const formatDate = (date: Date) => {
@@ -133,7 +133,7 @@ const SetTimeIntervals = ({ navigation }: any) => {
         </BigText>
       </Pressable>
 
-      <BigText>{t('   to   ')}</BigText>
+      <BigText>{t(' to ')}</BigText>
 
       {/* END HOUR */}
       <Pressable onPress={() => showTimepicker(endTime, onEndTimeChange)}>
@@ -142,7 +142,7 @@ const SetTimeIntervals = ({ navigation }: any) => {
         </BigText>
       </Pressable>
 
-      {isHungarian && <BigText>{t('between')}</BigText>}
+      {isHungarian && <BigText> {t('between')}</BigText>}
     </Row>
   );
 

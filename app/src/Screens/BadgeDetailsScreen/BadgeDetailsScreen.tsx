@@ -84,13 +84,13 @@ const BadgeDetailsScreen = ({ route }: any) => {
       {/* Optional: Display progress text */}
       {badge.progress !== undefined && !badge.earned && (
         <Text style={{ marginTop: 10, textAlign: 'center', color: styles.text.color }}>
-          t(Progress: {Math.round(badge.progress * 100)}%)
+          {t(`Progress: ${Math.round(badge.progress * 100)}%`)}
         </Text>
       )}
 
       {badge.earned && (
         <Text style={{ marginTop: 10, textAlign: 'center', color: styles.accent.backgroundColor }}>
-          t(Badge Earned!)
+          {t('Badge Earned!')}
         </Text>
       )}
     </Column>

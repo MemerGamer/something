@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Column from '../../components/atoms/Column';
 import H1 from '../../components/atoms/H1';
@@ -131,7 +131,9 @@ const CreateThingScreen = ({ navigation }: any) => {
                 placeholder={"Type your friend's username"}
               />
             </Column>
-            <MyButton text={'Add'} onPress={handleUsernameAdd} />
+            <View style={{ height: 55 }}>
+              <MyButton text={'Add'} onPress={handleUsernameAdd} />
+            </View>
           </Row>
           <LinearGradient
             pointerEvents="none"
