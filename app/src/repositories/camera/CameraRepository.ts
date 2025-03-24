@@ -10,8 +10,8 @@ export default class CameraRepository extends BaseRepository {
     // @ts-ignore
     body.append('image', {
       uri: image,
-      name: 'image',
-      type: 'image/jpg'
+      name: 'image.jpg',
+      type: 'image/jpeg'
     });
     body.append('thingId', uuid);
 
