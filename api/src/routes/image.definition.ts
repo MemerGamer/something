@@ -12,7 +12,15 @@ export const uploadImage = createRoute({
   description: 'Send an image as a checkpoint for a thing. <br> (Scalar UI does not support formdata yet)',
   tags: ['Images'],
   request: {
-    headers: [z.object({ 'Content-Type': z.string() }).optional().default({ 'Content-Type': 'multipart/form-data' })],
+    headers: [
+      z.object({
+        'Content-Type': z
+          .string()
+          .optional()
+          .default('multipart/form-data')
+          .openapi({ param: { name: 'Content-Type', in: 'header' } })
+      })
+    ],
     body: formc(
       z
         .object({
