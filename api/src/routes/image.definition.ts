@@ -1,6 +1,6 @@
 import { createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
-import { bearerAuth, defaultResponses, formc, jsonc, useAccessToken } from '../utils/openapi.js';
+import { bearerAuth, defaultResponses, jsonc, useAccessToken } from '../utils/openapi.js';
 import { StatusCodes } from '../types/status-codes.js';
 import { RewardInfoModel } from '../types/reward.js';
 
@@ -20,15 +20,17 @@ export const uploadImage = createRoute({
           .default('multipart/form-data')
           .openapi({ param: { name: 'Content-Type', in: 'header' } })
       })
-    ]
-    // body: formc(
-    //   z
-    //     .object({
-    //       image: z.any().openapi({ format: 'binary' }).optional(),
-    //       thingId: z.string().optional()
-    //     })
-    //     .optional()
-    // )
+    ],
+    body: {
+      content: {
+        'multipart/form-data': {
+          schema: z.object({
+            image: z.any().openapi({ format: 'binary' }).optional(),
+            thingId: z.string().optional()
+          })
+        }
+      }
+    }
   },
   responses: {
     ...defaultResponses,
