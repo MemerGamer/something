@@ -14,9 +14,11 @@ export const imageRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(uploadImage, async (c) => {
     const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
 
-    const body = await c.req.parseBody();
-    const image = (await body['image']) as File;
-    const thingId = body['thingId'] as string;
+    const formData = await c.req.formData();
+    console.log('FormData received:', formData);
+
+    const image = formData.get('image') as File;
+    const thingId = formData.get('thingId') as string;
 
     const data = await image.arrayBuffer();
     const filename = await imageService.saveImageToDisk(data);
