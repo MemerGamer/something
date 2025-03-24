@@ -11,15 +11,6 @@ export const uploadImage = createRoute({
   security: bearerAuth,
   description: 'Send an image as a checkpoint for a thing. <br> (Scalar UI does not support formdata yet)',
   tags: ['Images'],
-  request: {
-    body: {
-      content: {
-        'multipart/form-data': {
-          schema: z.object({}).passthrough()
-        }
-      }
-    }
-  },
   responses: {
     ...defaultResponses,
     [StatusCodes.OK]: {
