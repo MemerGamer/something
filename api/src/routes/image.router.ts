@@ -12,19 +12,36 @@ const rewardService = new RewardService();
 
 export const imageRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(uploadImage, async (c) => {
-    const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
+    try {
+      const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
 
-    const formData = await c.req.formData();
-    console.log('FormData received:', formData);
+      const formData = await c.req.formData();
+      console.log('FormData received:', formData);
 
-    const image = formData.get('image') as File;
-    const thingId = formData.get('thingId') as string;
+      const image = formData.get('image');
+      const thingId = formData.get('thingId');
 
-    const data = await image.arrayBuffer();
-    const filename = await imageService.saveImageToDisk(data);
+      if (!image || !(image instanceof File)) {
+        console.error('Invalid or missing image file:', image);
+        return c.text('Invalid or missing image file', StatusCodes.BAD_REQUEST);
+      }
 
-    const reward = await rewardService.handleImageUpload(userId, thingId, filename);
-    return c.json(reward, StatusCodes.OK);
+      if (!thingId) {
+        console.error('Missing thingId');
+        return c.text('thingId is required', StatusCodes.BAD_REQUEST);
+      }
+
+      const data = await image.arrayBuffer();
+      const filename = await imageService.saveImageToDisk(data);
+
+      const reward = await rewardService.handleImageUpload(userId, thingId.toString(), filename);
+      return c.json(reward, StatusCodes.OK);
+    } catch (error) {
+      console.error('Upload error:', error);
+      const formData = await c.req.formData();
+      console.log('FormData received:', formData);
+      return c.text('Internal Server Error', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
   })
 
   .openapi(serveImage, async (c, next) => {
