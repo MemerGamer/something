@@ -14,18 +14,7 @@ export const imageRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(uploadImage, async (c) => {
     const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
 
-    let body = null;
-    try {
-      body = await c.req.parseBody();
-    } catch (error) {
-      console.error(error);
-      console.error(await c.req.text());
-      return c.json({ error: 'Invalid request body' }, StatusCodes.BAD_REQUEST);
-    }
-    if (!body) {
-      return c.json({ error: 'Invalid request body' }, StatusCodes.BAD_REQUEST);
-    }
-
+    const body = await c.req.parseBody();
     const image = (await body['image']) as File;
     const thingId = body['thingId'] as string;
 

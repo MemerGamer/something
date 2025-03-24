@@ -157,7 +157,7 @@ export default class ApiService {
         method: 'POST',
         headers: {
           Authorization: options?.token ? `Bearer ${options.token}` : '',
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: options?.body
       });
