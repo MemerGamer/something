@@ -14,12 +14,10 @@ export const imageRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
   .openapi(uploadImage, async (c) => {
     try {
       const userId = (c.get('jwtPayload') as AccessTokenPayload).id;
-
-      const formData = await c.req.formData();
-      console.log('FormData received:', formData);
-
-      const image = formData.get('image');
-      const thingId = formData.get('thingId');
+      console.log(await c.req.json());
+      const body = await c.req.parseBody();
+      const image = (await body['image']) as File;
+      const thingId = body['thingId'] as string;
 
       if (!image || !(image instanceof File)) {
         console.error('Invalid or missing image file:', image);

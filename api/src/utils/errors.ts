@@ -50,10 +50,6 @@ export const globalErrorHandler: ErrorHandler = (error, c) => {
   if (error instanceof HTTPException && error.res?.status === StatusCodes.UNAUTHORIZED) {
     return c.json(reasonPhrase(StatusCodes.UNAUTHORIZED), StatusCodes.UNAUTHORIZED);
   }
-  c.req
-    .formData()
-    .then((formData) => console.error('FormData at error time:', formData))
-    .catch((formError) => console.error('Failed to parse FormData in error handler:', formError));
 
   return c.json(reasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR), StatusCodes.INTERNAL_SERVER_ERROR);
 };
