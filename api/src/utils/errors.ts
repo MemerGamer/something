@@ -50,9 +50,6 @@ export const globalErrorHandler: ErrorHandler = (error, c) => {
   if (error instanceof HTTPException && error.res?.status === StatusCodes.UNAUTHORIZED) {
     return c.json(reasonPhrase(StatusCodes.UNAUTHORIZED), StatusCodes.UNAUTHORIZED);
   }
-  c.req.parseBody().then((body) => {
-    console.error(body);
-  });
   console.error(error);
   return c.json(reasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR), StatusCodes.INTERNAL_SERVER_ERROR);
 };

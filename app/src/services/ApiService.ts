@@ -3,6 +3,8 @@ import type { Client, InferResponseType, InferRequestType } from '../../../api/d
 import { StatusCode } from 'hono/utils/http-status';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const hono = require('../../node_modules/hono/dist/client/index.js');
+import RNFetchBlob from 'rn-fetch-blob';
+import { Platform } from 'react-native';
 
 export type ApiResponse<T, S extends StatusCode> = InferResponseType<T, S>;
 export type ApiRequest<T> = InferRequestType<T>;
@@ -150,28 +152,51 @@ export default class ApiService {
   }
 
   async postFormData<T = object | null>(endPoint: string, options: { body: FormData; token: string }) {
-    let response;
+    const url = `${this.baseUrl}/${endPoint}`;
+    const headers = {
+      Authorization: options.token ? `Bearer ${options.token}` : ''
+    };
     try {
       await this.call(this.client.auth.protected.$get, {});
-      response = await fetch(`${this.baseUrl}/${endPoint}`, {
-        method: 'POST',
-        headers: {
-          Authorization: options?.token ? `Bearer ${options.token}` : '',
-          'Content-Type': 'multipart/form-data'
-        },
-        body: options?.body
-      });
+      const body = [] as any;
 
-      if (!response.ok) {
-        throw Error(await response.text());
+      // @ts-ignore
+      const parts = options.body._parts || [];
+      for (const [key, value] of parts) {
+        if (value && typeof value === 'object' && value.uri) {
+          // Handle file object
+          console.log(`Processing file: ${value.uri}`);
+
+          // Get the correct path for RNFetchBlob
+          let filePath = value.uri;
+          if (Platform.OS === 'android' && filePath.startsWith('file://')) {
+            // On Android, remove 'file://' prefix
+            filePath = filePath.substring(7);
+          } else if (Platform.OS === 'ios' && !filePath.startsWith('file://')) {
+            // On iOS, ensure 'file://' prefix is present if needed
+            filePath = `file://${filePath}`;
+          }
+
+          console.log(`Transformed path: ${filePath}`);
+
+          body.push({
+            name: key,
+            filename: value.name || 'file',
+            type: value.type,
+            data: RNFetchBlob.wrap(filePath)
+          });
+        } else {
+          body.push({ name: key, data: String(value) });
+        }
       }
+      const response = await RNFetchBlob.fetch('POST', url, headers, body);
 
-      return (await response.json()) as T;
+      if (response.respInfo.status >= 200 && response.respInfo.status < 300) {
+        return response.json() as T;
+      } else {
+        throw new Error(await response.text());
+      }
     } catch (e) {
-      if (response && response.ok) {
-        return {};
-      }
-
       console.log('Error while postFormData: ', e);
       return null;
     }
