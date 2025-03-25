@@ -117,11 +117,11 @@ export const getUserType = createAsyncThunk('auth/getUserType', async (_, { reje
     console.info('Making API request...');
     const response = await api.call(api.client.user.me.type.$get, {});
 
-    console.info('API response: ', response);
+    // console.info('API response: ', response);
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Parsed response: ', data);
+      // console.log('Parsed response: ', data);
       return data;
     }
 

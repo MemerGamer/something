@@ -165,7 +165,7 @@ export default class ApiService {
       for (const [key, value] of parts) {
         if (value && typeof value === 'object' && value.uri) {
           // Handle file object
-          console.log(`Processing file: ${value.uri}`);
+          // console.log(`Processing file: ${value.uri}`);
 
           // Get the correct path for RNFetchBlob
           let filePath = value.uri;
@@ -177,7 +177,7 @@ export default class ApiService {
             filePath = `file://${filePath}`;
           }
 
-          console.log(`Transformed path: ${filePath}`);
+          // console.log(`Transformed path: ${filePath}`);
 
           body.push({
             name: key,

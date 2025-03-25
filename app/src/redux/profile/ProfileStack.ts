@@ -63,7 +63,7 @@ export const getUserType = createAsyncThunk('profile/getUserType', async (_, { r
     console.info('Making API request...');
     const response = await api.call(api.client.user.me.type.$get, {});
 
-    console.info('API response: ', response);
+    // console.info('API response: ', response);
 
     if (response.ok) {
       const data = await response.json();

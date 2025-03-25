@@ -10,8 +10,13 @@ import { useAppDispatch } from '../../hooks/hooks';
 import { NewThingDTO, setScheduleForNewPersonalThing } from '../../redux/thing/ThingStack';
 import { DateTime } from 'luxon';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../services/i18n';
 
 const SetSocialTimeIntervals = ({ navigation }: any) => {
+  const { t } = useTranslation();
+  const isHungarian = i18n.language === 'hu';
+
   const dispatch = useAppDispatch();
 
   const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
@@ -86,7 +91,7 @@ const SetSocialTimeIntervals = ({ navigation }: any) => {
   };
 
   const formatTime = (date: Date) => {
-    return DateTime.fromJSDate(date).toFormat('HH:mm');
+    return DateTime.fromJSDate(date).toFormat('HH : mm');
   };
 
   const formatDate = (date: Date) => {
@@ -105,7 +110,7 @@ const SetSocialTimeIntervals = ({ navigation }: any) => {
         </BigText>
       </Pressable>
 
-      <BigText>{'   to   '}</BigText>
+      <BigText>{t(' to ')}</BigText>
 
       {/* END HOUR */}
       <Pressable onPress={() => showTimepicker(endTime, onEndTimeChange)}>
@@ -113,6 +118,8 @@ const SetSocialTimeIntervals = ({ navigation }: any) => {
           {formatTime(endTime)}
         </BigText>
       </Pressable>
+
+      {isHungarian && <BigText> {t('between')}</BigText>}
     </Row>
   );
 
