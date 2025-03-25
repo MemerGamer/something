@@ -19,8 +19,15 @@ export const imageRouter = new OpenAPIHono({ defaultHook: zodErrorHandler })
     const thingId = body['thingId'] as string;
 
     const data = await image.arrayBuffer();
-    const filename = await imageService.saveImageToDisk(data);
-
+    let filename = null;
+    try {
+      filename = await imageService.saveImageToDisk(data);
+      if (!filename) {
+        return c.text(reasonPhrase('Could not save the image - from if'), StatusCodes.INTERNAL_SERVER_ERROR);
+      }
+    } catch (error) {
+      return c.text(reasonPhrase('Could not save the image - from try-catch'), StatusCodes.INTERNAL_SERVER_ERROR);
+    }
     const reward = await rewardService.handleImageUpload(userId, thingId, filename);
     return c.json(reward, StatusCodes.OK);
   })
