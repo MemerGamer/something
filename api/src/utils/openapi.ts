@@ -17,11 +17,11 @@ export function formc<TSchema>(schema: TSchema) {
 }
 
 export function useAccessToken() {
-  return jwt({ secret: process.env.ACCESS_TOKEN_SECRET });
+  return jwt({ secret: process.env.ACCESS_TOKEN_SECRET, alg: 'HS256' });
 }
 
 export function useRefreshToken() {
-  return jwt({ secret: process.env.REFRESH_TOKEN_SECRET });
+  return jwt({ secret: process.env.REFRESH_TOKEN_SECRET, alg: 'HS256' });
 }
 
 export const defaultResponses = {
